@@ -23,7 +23,7 @@ final userRoleProvider = FutureProvider<String?>((ref) async {
       .from('profiles')
       .select('role')
       .eq('id', user.id)
-      .single();
+      .maybeSingle();
 
-  return response['role'] as String?;
+  return response?['role'] as String?;
 });

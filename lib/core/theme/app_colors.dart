@@ -31,7 +31,7 @@ abstract class AppColors {
 
   // Ghost border — only at 15% opacity, accessibility only
   static const Color ghostBorderBase = Color(0xFFbfc9c3);
-  static Color get ghostBorder => ghostBorderBase.withOpacity(0.15);
+  static Color get ghostBorder => ghostBorderBase.withValues(alpha: 0.15);
 
   // Status
   static const Color error = Color(0xFFba1a1a);

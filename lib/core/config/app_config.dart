@@ -1,6 +1,6 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-class AppConfig {
+abstract class AppConfig {
   static String get supabaseUrl =>
       dotenv.env['SUPABASE_URL'] ?? (throw Exception('SUPABASE_URL not set'));
 

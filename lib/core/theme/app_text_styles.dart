@@ -67,6 +67,13 @@ abstract class AppTextStyles {
         height: 1.4,
       );
 
+  static TextStyle get titleSm => GoogleFonts.notoSerif(
+        fontSize: 14,
+        fontWeight: FontWeight.w500,
+        color: AppColors.onBackground,
+        height: 1.4,
+      );
+
   // --- Body (Inter) — descriptions, functional text ---
   static TextStyle get bodyLg => GoogleFonts.inter(
         fontSize: 16,
@@ -101,6 +108,14 @@ abstract class AppTextStyles {
   static TextStyle get labelLg => GoogleFonts.inter(
         fontSize: 13,
         fontWeight: FontWeight.w600,
+        color: AppColors.textSecondary,
+        letterSpacing: 0.5,
+        height: 1.4,
+      );
+
+  static TextStyle get labelMd => GoogleFonts.inter(
+        fontSize: 12,
+        fontWeight: FontWeight.w500,
         color: AppColors.textSecondary,
         letterSpacing: 0.5,
         height: 1.4,

@@ -27,10 +27,12 @@ abstract class AppTheme {
           headlineSmall: AppTextStyles.headlineSm,
           titleLarge: AppTextStyles.titleLg,
           titleMedium: AppTextStyles.titleMd,
+          titleSmall: AppTextStyles.titleSm,
           bodyLarge: AppTextStyles.bodyLg,
           bodyMedium: AppTextStyles.bodyMd,
           bodySmall: AppTextStyles.bodySm,
           labelLarge: AppTextStyles.labelLg,
+          labelMedium: AppTextStyles.labelMd,
           labelSmall: AppTextStyles.label,
         ),
         // No borders — tonal layering only

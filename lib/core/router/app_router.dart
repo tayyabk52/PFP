@@ -13,14 +13,19 @@ final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     refreshListenable: routerNotifier,
     redirect: (context, state) {
-      final role = routerNotifier._role;
-      final isAuthenticated = routerNotifier._isAuthenticated;
-      final hasApp = routerNotifier._hasSellerApplication;
+      // Wait for auth stream to emit its first event
+      if (routerNotifier._authLoading) return null;
+
+      // Wait for role and application status to resolve
+      final roleAsync = ref.read(userRoleProvider);
+      final hasAppAsync = ref.read(hasSellerApplicationProvider);
+      if (roleAsync is AsyncLoading || hasAppAsync is AsyncLoading) return null;
+
       return RouteGuards.getRedirect(
         location: state.uri.toString(),
-        role: role,
-        isAuthenticated: isAuthenticated,
-        hasSellerApplication: hasApp,
+        role: routerNotifier._role,
+        isAuthenticated: routerNotifier._isAuthenticated,
+        hasSellerApplication: routerNotifier._hasSellerApplication,
       );
     },
     routes: [
@@ -79,10 +84,12 @@ class _RouterNotifier extends ChangeNotifier {
   String? _role;
   bool _isAuthenticated = false;
   bool _hasSellerApplication = false;
+  bool _authLoading = true; // true until auth stream emits first event
 
   _RouterNotifier(this._ref) {
-    _ref.listen(currentUserProvider, (_, user) {
-      _isAuthenticated = user != null;
+    _ref.listen(authStateProvider, (_, next) {
+      _authLoading = next is AsyncLoading;
+      _isAuthenticated = next.valueOrNull?.session?.user != null;
       notifyListeners();
     });
     _ref.listen(userRoleProvider, (_, role) {

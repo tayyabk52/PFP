@@ -54,5 +54,29 @@ void main() {
       await tester.pumpWidget(buildShell(width: 400));
       expect(find.byKey(const Key('content')), findsOneWidget);
     });
+
+    testWidgets('passes isAdmin flag to SidebarNav on desktop', (tester) async {
+      await tester.pumpWidget(buildShell(width: 1200, isAdmin: true));
+      final sidebar = tester.widget<SidebarNav>(find.byType(SidebarNav));
+      expect(sidebar.isAdmin, isTrue);
+    });
+
+    testWidgets('passes isAdmin flag to PfcBottomNav on mobile', (tester) async {
+      await tester.pumpWidget(buildShell(width: 400, isAdmin: true));
+      final bottomNav = tester.widget<PfcBottomNav>(find.byType(PfcBottomNav));
+      expect(bottomNav.isAdmin, isTrue);
+    });
+
+    testWidgets('exactly 600px shows SidebarNav (tablet boundary)', (tester) async {
+      await tester.pumpWidget(buildShell(width: 600));
+      expect(find.byType(SidebarNav), findsOneWidget);
+      expect(find.byType(PfcBottomNav), findsNothing);
+    });
+
+    testWidgets('exactly 1024px shows collapsed SidebarNav (desktop boundary)', (tester) async {
+      await tester.pumpWidget(buildShell(width: 1024));
+      expect(find.byType(SidebarNav), findsOneWidget);
+      expect(find.byType(PfcBottomNav), findsNothing);
+    });
   });
 }

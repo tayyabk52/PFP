@@ -41,7 +41,7 @@ class SidebarNav extends StatelessWidget {
     String location = '';
     try {
       location = GoRouterState.of(context).uri.toString();
-    } catch (_) {
+    } on Error {
       // No GoRouter in tree (e.g. during tests)
     }
 
@@ -103,7 +103,9 @@ class SidebarNav extends StatelessWidget {
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               children: items.map((item) {
-                final isActive = location.startsWith(item.route);
+                final isActive = (item.route == '/dashboard' || item.route == '/admin')
+                    ? location == item.route
+                    : location.startsWith(item.route);
                 return _SidebarItem(
                     item: item, isActive: isActive, collapsed: collapsed);
               }).toList(),

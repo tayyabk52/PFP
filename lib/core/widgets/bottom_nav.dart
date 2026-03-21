@@ -11,7 +11,7 @@ class PfcBottomNav extends StatelessWidget {
     String location = '';
     try {
       location = GoRouterState.of(context).uri.toString();
-    } catch (_) {
+    } on Error {
       // No GoRouter in tree (e.g. during tests)
     }
 

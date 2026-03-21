@@ -5,7 +5,7 @@ import 'bottom_nav.dart';
 
 /// Adaptive layout shell.
 /// > 1024px: persistent left sidebar + content area
-/// 600–1024px: collapsed icon-only sidebar + content area
+/// >= 600px and <= 1024px: collapsed icon-only sidebar + content area
 /// < 600px: content area + bottom navigation bar
 class AppShell extends StatelessWidget {
   final Widget child;

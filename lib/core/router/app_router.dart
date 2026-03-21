@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../features/auth/pages/login_page.dart';
+import '../../features/auth/pages/register_page.dart';
 import '../../features/auth/providers/auth_provider.dart';
 import '../../features/auth/providers/profile_provider.dart';
 import '../widgets/app_shell.dart';
@@ -31,8 +33,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     routes: [
       // --- Public routes ---
       GoRoute(path: '/', builder: (_, __) => const StubPage(title: 'Landing')),
-      GoRoute(path: '/login', builder: (_, __) => const StubPage(title: 'Login')),
-      GoRoute(path: '/register', builder: (_, __) => const StubPage(title: 'Register')),
+      GoRoute(path: '/login', builder: (_, __) => const LoginPage()),
+      GoRoute(path: '/register', builder: (_, __) => const RegisterPage()),
       GoRoute(path: '/register/seller-apply', builder: (_, __) => const StubPage(title: 'Seller Application')),
       GoRoute(path: '/marketplace', builder: (_, __) => const StubPage(title: 'Marketplace')),
       GoRoute(path: '/marketplace/:id', builder: (_, __) => const StubPage(title: 'Listing Detail')),

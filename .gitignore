@@ -47,3 +47,10 @@ app.*.map.json
 # Environment variables
 .env
 *.env
+
+# Claude Code tooling artifacts
+.claude/
+docs/superpowers/
+
+# Design reference binaries (keep HTML files, not screenshots)
+DesignInspo/**/*.png

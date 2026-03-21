@@ -31,6 +31,7 @@ void main() {
       await tester.pumpWidget(buildShell(width: 800));
       expect(find.byType(SidebarNav), findsOneWidget);
       expect(find.byType(PfcBottomNav), findsNothing);
+      expect(find.byType(ListTile), findsNothing);  // collapsed shows IconButtons
     });
 
     testWidgets('shows PfcBottomNav on mobile (<600px)', (tester) async {
@@ -41,6 +42,16 @@ void main() {
 
     testWidgets('always renders child content', (tester) async {
       await tester.pumpWidget(buildShell(width: 1200));
+      expect(find.byKey(const Key('content')), findsOneWidget);
+    });
+
+    testWidgets('renders child content on tablet', (tester) async {
+      await tester.pumpWidget(buildShell(width: 800));
+      expect(find.byKey(const Key('content')), findsOneWidget);
+    });
+
+    testWidgets('renders child content on mobile', (tester) async {
+      await tester.pumpWidget(buildShell(width: 400));
       expect(find.byKey(const Key('content')), findsOneWidget);
     });
   });

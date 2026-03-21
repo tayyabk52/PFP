@@ -25,7 +25,7 @@ class AppShell extends StatelessWidget {
     final width = MediaQuery.of(context).size.width;
 
     // Desktop: persistent full sidebar
-    if (width >= _desktopBreakpoint) {
+    if (width > _desktopBreakpoint) {
       return Scaffold(
         backgroundColor: AppColors.surfaceContainerLow,
         body: Row(

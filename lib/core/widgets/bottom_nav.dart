@@ -51,7 +51,7 @@ class PfcBottomNav extends StatelessWidget {
       if (location.startsWith('/admin')) return 0;
       return 3;
     }
-    if (location.startsWith('/marketplace')) return 1;
+    if (location.startsWith('/marketplace')) return 0;
     if (location.startsWith('/dashboard/verification')) return 2;
     if (location.startsWith('/dashboard')) return 1;
     return 0;

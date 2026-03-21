@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9f9fc;
+            color: #1a1c1e;
+        }
+        h1, h2, h3, h4, .font-serif {
+            font-family: 'Noto Serif', serif;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        /* Drawer animation simulation for static HTML */
+        #filter-drawer {
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+        }
+        #filter-drawer.open {
+            transform: translateY(0);
+        }
+        input[type="range"] {
+            accent-color: #064e3b;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-high": "#e8e8ea",
+              "surface": "#f9f9fc",
+              "inverse-on-surface": "#f0f0f3",
+              "error-container": "#ffdad6",
+              "on-error": "#ffffff",
+              "on-tertiary": "#ffffff",
+              "on-surface": "#1a1c1e",
+              "surface-container": "#eeeef0",
+              "on-secondary-container": "#596374",
+              "surface-dim": "#dadadc",
+              "background": "#f9f9fc",
+              "primary-fixed": "#b0f0d6",
+              "surface-container-low": "#f3f3f6",
+              "secondary-container": "#d6e0f4",
+              "surface-bright": "#f9f9fc",
+              "secondary-fixed": "#d9e3f7",
+              "surface-tint": "#2b6954",
+              "inverse-surface": "#2f3133",
+              "on-primary-container": "#80bea6",
+              "tertiary": "#3e2b00",
+              "error": "#ba1a1a",
+              "surface-container-lowest": "#ffffff",
+              "inverse-primary": "#95d3ba",
+              "on-secondary": "#ffffff",
+              "primary-fixed-dim": "#95d3ba",
+              "on-tertiary-fixed-variant": "#5d4201",
+              "secondary-fixed-dim": "#bdc7db",
+              "on-error-container": "#93000a",
+              "on-secondary-fixed": "#121c2a",
+              "outline-variant": "#bfc9c3",
+              "secondary": "#555f70",
+              "primary-container": "#064e3b",
+              "on-tertiary-fixed": "#261900",
+              "primary": "#003527",
+              "tertiary-fixed-dim": "#e9c176",
+              "tertiary-container": "#5a4000",
+              "on-primary-fixed-variant": "#0b513d",
+              "on-primary": "#ffffff",
+              "surface-container-highest": "#e2e2e5",
+              "on-background": "#1a1c1e",
+              "on-tertiary-container": "#d3ac64",
+              "on-primary-fixed": "#002117",
+              "tertiary-fixed": "#ffdea5",
+              "surface-variant": "#e2e2e5",
+              "outline": "#707974",
+              "on-surface-variant": "#404944",
+              "on-secondary-fixed-variant": "#3d4757"
+            },
+            fontFamily: {
+              "headline": ["Noto Serif"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-surface text-on-surface selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full flex justify-between items-center px-8 py-4 bg-surface/80 dark:bg-emerald-950/80 backdrop-blur-md z-50">
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-emerald-50/50 transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined text-emerald-900" data-icon="search">search</span>
+</button>
+</div>
+<div class="text-2xl font-serif italic text-emerald-900">The Olfactory Archive</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-emerald-50/50 transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined text-emerald-900" data-icon="notifications">notifications</span>
+</button>
+</div>
+</header>
+<main class="pt-16 pb-32 max-w-[1440px] mx-auto">
+<!-- Hero Section -->
+<section class="relative min-h-[85dvh] lg:min-h-[700px] w-full flex items-center justify-center overflow-hidden mb-16 px-6 py-20 text-center">
+<div class="absolute inset-0 z-0">
+<img alt="Luxury Fragrance Archive Collection" class="w-full h-full object-cover scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDknolJSR_d7NhsufiUuaLzR64JJzy7YAikUpLHpS5qdYSo4O-cBQjuhySY40gVxCVueSKEp2NHTNWkJNyo80w_1uht6S9-eWlx1s_qkF9Au4IT6cYX1os7gNeuwUjQ5o-c0QlkAF43NB2wTf_2Xio0QI_kX_nwwnymV1CqOkhTzmuwFkPl9AKK36l7QENQ3iLHdhupmA6-u8OJluz6WaQt43vXjrEMlzDI7qtLmQjEgOPqfkBuEM9ROFmWnSSgBt9pM0rA1q1IolTM"/>
+<div class="absolute inset-0 bg-primary/60 mix-blend-multiply"></div>
+<div class="absolute inset-0 bg-gradient-to-b from-primary/80 via-transparent to-primary/90"></div>
+<div class="absolute inset-0 bg-black/20"></div>
+</div>
+<div class="relative z-10 max-w-2xl mx-auto flex flex-col items-center">
+<div class="mb-6 flex flex-col items-center gap-2">
+<span class="w-12 h-[1px] bg-tertiary-fixed"></span>
+<span class="text-[10px] font-label font-bold uppercase tracking-[0.4em] text-tertiary-fixed">Premium Collection — Est. 2024</span>
+<span class="w-12 h-[1px] bg-tertiary-fixed"></span>
+</div>
+<h1 class="text-[2.75rem] leading-[1.1] md:text-7xl font-headline font-bold text-on-primary mb-8 tracking-tight px-2">
+                Curating Pakistan's <br class="hidden md:block"/><span class="italic font-normal">Finest Scents.</span>
+</h1>
+<p class="text-base md:text-lg font-body text-primary-fixed/90 leading-relaxed mb-12 max-w-lg mx-auto">
+                The premier destination for authentic fragrance discovery, curated decants, and expert collection management.
+            </p>
+<div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto px-4">
+<button class="bg-tertiary-fixed text-on-tertiary-fixed px-10 py-5 font-label text-xs uppercase tracking-[0.25em] font-bold hover:bg-tertiary transition-all hover:text-white shadow-2xl active:scale-95 duration-150">
+                    Explore Collection
+                </button>
+<button class="border border-on-primary/40 text-on-primary px-10 py-5 font-label text-xs uppercase tracking-[0.25em] font-bold backdrop-blur-md hover:bg-on-primary hover:text-primary transition-all active:scale-95 duration-150">
+                    List a Fragrance
+                </button>
+</div>
+<div class="mt-16 flex flex-col items-center gap-4 animate-bounce opacity-40">
+<span class="text-[9px] font-label uppercase tracking-widest text-on-primary">Scroll to archive</span>
+<span class="material-symbols-outlined text-on-primary text-sm" data-icon="keyboard_arrow_down">keyboard_arrow_down</span>
+</div>
+</div>
+</section>
+<!-- Featured Brands Carousel -->
+<section class="mb-20">
+<div class="px-8 lg:px-16 mb-8 flex justify-between items-end">
+<h2 class="text-4xl font-headline font-bold text-primary">Featured Houses</h2>
+<div class="text-[10px] font-label uppercase tracking-widest text-secondary border-b border-secondary/20 pb-1">Archive Collections</div>
+</div>
+<div class="flex overflow-x-auto lg:grid lg:grid-cols-5 gap-8 px-8 lg:px-16 pb-4 hide-scrollbar">
+<div class="flex-none w-48 lg:w-auto group cursor-pointer">
+<div class="aspect-[3/4] bg-surface-container-low flex items-center justify-center overflow-hidden mb-3">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Luxury perfume bottle" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3WlA27EsZdcGJHWrw0oR1HpUqgFfK-wGode6u-7FBKCb0l3t976HYPDqc4O0ZsYEWlR-__yn7StJTpoiYgpv_fnpwbprKG8s3hEgp8eK0E0LIKJU57Ae5bzFicQqVGQccCXN5YsDInTtcKpEmzUwocAYvufB44EbPPrBpcNlRbeOUNo_427BQqAq781OG7x4cuDgyb89zBnykKhgKXUhoGy2wgzqZudUS46giIQqW26UCT7h3_wJod6CBi5qKEpuybud8YX-PwooT"/>
+</div>
+<p class="font-headline text-lg italic text-primary break-words">Tom Ford</p>
+<p class="text-[10px] font-label uppercase tracking-tighter text-secondary">Private Blend</p>
+</div>
+<div class="flex-none w-48 lg:w-auto group cursor-pointer">
+<div class="aspect-[3/4] bg-surface-container-low flex items-center justify-center overflow-hidden mb-3">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Creed Aventus" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQGmpPTPVuyZ27JBvjP8smgi28hXnJkDxZw8MhuCPaCw9Xen9tOr-QjCIRhTo5a0l2JljehD9aEMEgxooJjDj2yzA3si0zpcB9zLKDZ3FIcBJ7EVxYQ3HEjH4Pe4xFG07ZG9-xy9hgeOM8vWJ8y_2V-wJcyNbVuhnXRDkfpnK7a5NsVA_4r3r5LyxqwH8mB9t49v3fDVY_wyCqczSHlwAuMEvVli_Nt4Qqrl3Dnk856kNifIUDPiZnyv5umxIQS0oaoQrE6XJvEj7s"/>
+</div>
+<p class="font-headline text-lg italic text-primary break-words">Creed</p>
+<p class="text-[10px] font-label uppercase tracking-tighter text-secondary">Heritage Craft</p>
+</div>
+<div class="flex-none w-48 lg:w-auto group cursor-pointer">
+<div class="aspect-[3/4] bg-surface-container-low flex items-center justify-center overflow-hidden mb-3">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Nishane fragrance" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8VSXCFaTXv2t8xZFallWtSWZndUTcGYraIrrcjCv6loHeoGDB4ydgJScUyVak-P1DBkh5kk6_EtGrs3uD9O8rG-zCJAhTicJirJ4Sw2Zzp4y9wDvEY82Ob4FGhRrhKAdJdP9eFoBgko_YvYuDs-Mar4Uqwmcayh1zzCSAr97yczZz7eyQMTLsS83jVo_ZC0M3A6IcJtfIbLJnkDRECJTVFQ0aYVF9VN21-4OkkCCG8PsS2coDptZHMxT3qD5SChj9mMA7LqJc-ydC"/>
+</div>
+<p class="font-headline text-lg italic text-primary break-words">Nishane</p>
+<p class="text-[10px] font-label uppercase tracking-tighter text-secondary">Extrait de Parfum</p>
+</div>
+<div class="flex-none w-48 lg:w-auto group cursor-pointer">
+<div class="aspect-[3/4] bg-surface-container-low flex items-center justify-center overflow-hidden mb-3">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Byredo luxury fragrance" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDiXuTrWLyDewrRRRwqaXnlMtvWcJ8EXzIRfsOMLzzub3C9NWK7k3La0Hka4JBO4MKHwArpZJKjbGEwyJcflaJ7zFKkE_hdPoxoO7ETFpDPI-nxoLjLwfuhzT55iEadytGztCK2IpMLMJ7EmbtS6XoPP0RanaqhKsg-Z4m1geRU0KhqkhZFeh5YcFGdT671rLpzfBsQI6SgeOk6Le0jDXj8x535dhwK7UAlo65ZcSJMy5S4O4yVLgokcr20zFkaYtDkR9fTO0izTC-a"/>
+</div>
+<p class="font-headline text-lg italic text-primary break-words">Byredo</p>
+<p class="text-[10px] font-label uppercase tracking-tighter text-secondary">Contemporary Minimalism</p>
+</div>
+<div class="flex-none w-48 lg:w-auto group cursor-pointer">
+<div class="aspect-[3/4] bg-surface-container-low flex items-center justify-center overflow-hidden mb-3">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Xerjoff bottle" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpkpuIo9DA939H3uehsc9Y6_8gTNsFxgmByHZ1lPHhs62I4qYdVSWHegu6sgsWf-kWFaOaBUvxAf-ZgowNTj0N4Lxy4lQZCNIksvvZ5gQoMHLjOO7ukanaf_HP7vaRln9_q1y5rH7gWEhKM1q8CVHdZlwn7Agj_YLj12MDvfEsDK7i1MlihZaqg7mgxB7XbaY_G7wGA5cXxWwEsSmYAVWqRWuK6FZznV0ibVY0miTqELfErXhfCh8idIbHEZ6e1ZvZEdmisl5xtSNM"/>
+</div>
+<p class="font-headline text-lg italic text-primary break-words">Xerjoff</p>
+<p class="text-[10px] font-label uppercase tracking-tighter text-secondary">Italian Opulence</p>
+</div>
+</div>
+</section>
+<!-- Redesigned Filter Section -->
+<section class="px-8 lg:px-16 mb-12 sticky top-[72px] bg-surface/95 backdrop-blur-md z-40 py-6 border-y border-surface-container">
+<div class="flex flex-col md:flex-row gap-6 md:items-center justify-between">
+<div class="flex items-center gap-4 flex-grow overflow-hidden">
+<button class="flex items-center gap-2 px-6 py-3 bg-primary text-on-primary font-label text-[11px] uppercase tracking-widest font-bold shadow-lg active:scale-95 transition-all" onclick="document.getElementById('filter-drawer').classList.add('open')">
+<span class="material-symbols-outlined text-sm" data-icon="tune">tune</span>
+                    Refine
+                </button>
+<div class="flex items-center gap-3 overflow-x-auto hide-scrollbar py-1">
+<button class="flex-none px-6 py-2 rounded-full bg-primary/10 text-primary font-label text-[10px] uppercase tracking-widest font-bold">All</button>
+<button class="flex-none px-6 py-2 rounded-full bg-surface-container-high text-secondary font-label text-[10px] uppercase tracking-widest hover:bg-surface-container-highest transition-colors font-bold border border-transparent">Full Bottles</button>
+<button class="flex-none px-6 py-2 rounded-full bg-surface-container-high text-secondary font-label text-[10px] uppercase tracking-widest hover:bg-surface-container-highest transition-colors font-bold border border-transparent">Decants</button>
+<button class="flex-none px-6 py-2 rounded-full bg-surface-container-high text-secondary font-label text-[10px] uppercase tracking-widest hover:bg-surface-container-highest transition-colors font-bold border border-transparent">ISO Posts</button>
+<button class="flex-none px-6 py-2 rounded-full bg-surface-container-high text-secondary font-label text-[10px] uppercase tracking-widest hover:bg-surface-container-highest transition-colors font-bold border border-transparent">Swaps</button>
+</div>
+</div>
+<div class="hidden lg:flex items-center gap-2 text-xs font-label uppercase tracking-widest text-secondary/60">
+<span class="font-bold text-primary">124</span> Results Found
+            </div>
+</div>
+</section>
+<!-- Listings Grid -->
+<section class="px-8 lg:px-16">
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+<!-- Listing Card 1 -->
+<div class="group flex flex-col bg-surface-container-lowest overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 border border-surface-container">
+<div class="relative overflow-hidden aspect-[4/5]">
+<div class="absolute top-3 left-3 z-10">
+<span class="bg-tertiary-container/95 backdrop-blur-sm text-on-tertiary-fixed text-[8px] font-label font-bold uppercase tracking-widest px-2.5 py-1.5 flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[10px]" data-icon="verified" style="font-variation-settings: 'FILL' 1;">verified</span> Trusted
+                        </span>
+</div>
+<div class="absolute top-3 right-3 z-10 font-label text-[10px] font-bold text-primary bg-surface/90 backdrop-blur px-2.5 py-1.5 border border-primary/10">
+                        Rs. 48,500
+                    </div>
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" data-alt="Tobacco Vanille Tom Ford" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOQRJlZ8viyeLlTZ0Rc-ItK8KGuXLthO6iRg8c7pUYzmWTQWD53zGApCshRD3LGU0q2H-n8fUsDu5AtCbdQt4TBaxKEHy2rxgMbYkzlLqVfLyYSFtbqL9Tgxl35ERanI8a2Y8wDGEGiLG6DdBLbMN37WP7bE1dZwZk299L9hB2fKBlmYcINSIuPq5GGsQOBt4QSoI3uCH7KUhSm6r_1ZN1bONiopMjZ4QxQXXJW9w1i1atIivmGqsmMpwRySv4YaoYzd1Yn7IWncNk"/>
+</div>
+<div class="p-5 flex flex-col flex-grow">
+<h3 class="font-headline font-bold text-base text-primary mb-1 break-words">Tobacco Vanille</h3>
+<p class="font-headline italic text-xs text-secondary mb-4">Tom Ford</p>
+<div class="flex flex-wrap gap-2 mt-auto">
+<span class="text-[9px] font-label uppercase tracking-widest bg-surface-container px-2.5 py-1 text-on-surface-variant border border-outline-variant/30">EDP</span>
+<span class="text-[9px] font-label uppercase tracking-widest bg-surface-container px-2.5 py-1 text-on-surface-variant border border-outline-variant/30">100ml</span>
+<span class="text-[9px] font-label uppercase tracking-widest bg-surface-container px-2.5 py-1 text-on-surface-variant border border-outline-variant/30">95% Full</span>
+</div>
+<div class="mt-5 pt-4 border-t border-surface-container flex justify-between items-center text-[9px] font-label text-outline uppercase tracking-widest">
+<span>Post #842</span>
+<span class="font-bold text-primary">Arslan R.</span>
+</div>
+</div>
+</div>
+<!-- Listing Card 2 -->
+<div class="group flex flex-col bg-surface-container-lowest overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 border border-surface-container">
+<div class="relative overflow-hidden aspect-[4/5]">
+<div class="absolute top-3 right-3 z-10 font-label text-[10px] font-bold text-primary bg-surface/90 backdrop-blur px-2.5 py-1.5 border border-primary/10">
+                        Rs. 62,000
+                    </div>
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" data-alt="Creed Aventus" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAX8h0h9LVU7-YrePOl1c_N7RyVe984T5SqJ5XmoLJLmKrDMd_NDVODv9foZOAyKjPDI_iLwyOuCWmW-8fWIiCDSskrmegvw2XkjQLu3Apwu1AhQ8YV9pPCxROZoncF4PKmtpPFf4N0kz4NEXEVpxgWvWUcrOXKLJyjnCwiru6-6p7VQaJ_v17gyjTlPVJabFzTqVHfoMOlNcX_RRnQO4Vc-hjQIp0NJ6k8IPt5Jzvqd7uhRUeFEPg0PsrsormqKf1wvsKc8MExLcv9"/>
+</div>
+<div class="p-5 flex flex-col flex-grow">
+<h3 class="font-headline font-bold text-base text-primary mb-1 break-words">Aventus (19P11)</h3>
+<p class="font-headline italic text-xs text-secondary mb-4">Creed</p>
+<div class="flex flex-wrap gap-2 mt-auto">
+<span class="text-[9px] font-label uppercase tracking-widest bg-surface-container px-2.5 py-1 text-on-surface-variant border border-outline-variant/30">EDP</span>
+<span class="text-[9px] font-label uppercase tracking-widest bg-surface-container px-2.5 py-1 text-on-surface-variant border border-outline-variant/30">100ml</span>
+<span class="text-[9px] font-label uppercase tracking-widest bg-surface-container px-2.5 py-1 text-on-surface-variant border border-outline-variant/30">BNIB</span>
+</div>
+<div class="mt-5 pt-4 border-t border-surface-container flex justify-between items-center text-[9px] font-label text-outline uppercase tracking-widest">
+<span>Post #839</span>
+<span class="font-bold text-primary">Hamza K.</span>
+</div>
+</div>
+</div>
+<!-- Listing Card 3 -->
+<div class="group flex flex-col bg-surface-container-lowest overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 border border-surface-container">
+<div class="relative overflow-hidden aspect-[4/5]">
+<div class="absolute top-3 left-3 z-10">
+<span class="bg-primary-container text-on-primary-container text-[8px] font-label font-bold uppercase tracking-widest px-2.5 py-1.5 flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[10px]" data-icon="sync_alt">sync_alt</span> Swap
+                        </span>
+</div>
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" data-alt="Nishane Hacivat" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBe1b_EZxgLsw8JU6I1ilS2MZoyjr7QvLsQ4zZoUonOGKk0Y5VoDl74wJhGFujcuB3dEaehUrhmcrN75vbulDqpdlbZRW8QEztjR3SPohoJ9GyenCS97xfK3wWi3kN3eqwbdo5xgon7OrdSRZc08YW9ekhCKpE8skSJ34eU4o3aHa2EtJTSWOdy4MlD290MD7Z-VhZdEEeHryibB4szx29p5fDz0BvuedYS2E9mWmU9Ql2en1EVUAzyBvJMcAV_PrKIDHHDtYSZdJIL"/>
+</div>
+<div class="p-5 flex flex-col flex-grow">
+<h3 class="font-headline font-bold text-base text-primary mb-1 break-words">Hacivat</h3>
+<p class="font-headline italic text-xs text-secondary mb-4">Nishane</p>
+<div class="flex flex-wrap gap-2 mt-auto">
+<span class="text-[9px] font-label uppercase tracking-widest bg-surface-container px-2.5 py-1 text-on-surface-variant border border-outline-variant/30">Extrait</span>
+<span class="text-[9px] font-label uppercase tracking-widest bg-surface-container px-2.5 py-1 text-on-surface-variant border border-outline-variant/30">50ml</span>
+<span class="text-[9px] font-label uppercase tracking-widest bg-surface-container px-2.5 py-1 text-on-surface-variant border border-outline-variant/30">Partial</span>
+</div>
+<div class="mt-5 pt-4 border-t border-surface-container flex justify-between items-center text-[9px] font-label text-outline uppercase tracking-widest">
+<span>Post #835</span>
+<span class="font-bold text-primary">Zaid A.</span>
+</div>
+</div>
+</div>
+<!-- Listing Card 4 -->
+<div class="group flex flex-col bg-surface-container-lowest overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 border border-surface-container">
+<div class="relative overflow-hidden aspect-[4/5]">
+<div class="absolute top-3 right-3 z-10 font-label text-[10px] font-bold text-primary bg-surface/90 backdrop-blur px-2.5 py-1.5 border border-primary/10">
+                        Rs. 18,000
+                    </div>
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" data-alt="Byredo Gypsy Water" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmZJJVkUy7Voy_W3P-bRQKsP05IzmzyrROzqDUx7RmZlBBTDqT4VT2HXnyOfieE2F26sLA85EG9elWSV5RLTY3nSABrxNK4A4U6e3UN0iLfzWVvlRablQPvCXqLsfqm8YgEPzdCwD9s4Mjk8-kLWWy6NyJdf253P4V62TXfbPQmCAzZ8UdU9zDFTYPYbuMWehdEmOGAdwchU5DXT4qXYm1wpclXRI3EolIDX9uR3iLOnyJULnkwDBoQpbbGQ_ccgp-RND4Wovef5Rv"/>
+</div>
+<div class="p-5 flex flex-col flex-grow">
+<h3 class="font-headline font-bold text-base text-primary mb-1 break-words">Gypsy Water</h3>
+<p class="font-headline italic text-xs text-secondary mb-4">Byredo</p>
+<div class="flex flex-wrap gap-2 mt-auto">
+<span class="text-[9px] font-label uppercase tracking-widest bg-surface-container px-2.5 py-1 text-on-surface-variant border border-outline-variant/30">EDP</span>
+<span class="text-[9px] font-label uppercase tracking-widest bg-surface-container px-2.5 py-1 text-on-surface-variant border border-outline-variant/30">100ml</span>
+<span class="text-[9px] font-label uppercase tracking-widest bg-surface-container px-2.5 py-1 text-on-surface-variant border border-outline-variant/30">70% Full</span>
+</div>
+<div class="mt-5 pt-4 border-t border-surface-container flex justify-between items-center text-[9px] font-label text-outline uppercase tracking-widest">
+<span>Post #830</span>
+<span class="font-bold text-primary">Usman T.</span>
+</div>
+</div>
+</div>
+<!-- Listing Card 5 (Desktop) -->
+<div class="hidden xl:flex group flex-col bg-surface-container-lowest overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 border border-surface-container">
+<div class="relative overflow-hidden aspect-[4/5]">
+<div class="absolute top-3 right-3 z-10 font-label text-[10px] font-bold text-primary bg-surface/90 backdrop-blur px-2.5 py-1.5 border border-primary/10">
+                        Rs. 24,500
+                    </div>
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" data-alt="Dior Homme Intense" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAm80AUVpZrt8IPYkRql2aRZH79NYlkSQjJ26uoH582wfIPYMN9zaTo2xBRMpD14GP7gveG7UdXVodrT9kS3YlS7TRLt9qiKQERjy2FCGHuPI487ZZygdcFf7OIhGQ5_-PaIkr4MPbk3uIgcxTXwJTuP4fnKKbCjqM4Zg51qcFhhZeypvPes9rbtwZs_J3h5swIQpUGgDNdqPe8CVE_ajPqavFuDaMg9_x1zr0-o24XDu6ZxHhWK_Q6Rj2JnrbdNyzr2sJljUiwTJuZ"/>
+</div>
+<div class="p-5 flex flex-col flex-grow">
+<h3 class="font-headline font-bold text-base text-primary mb-1 break-words">Homme Intense</h3>
+<p class="font-headline italic text-xs text-secondary mb-4">Dior</p>
+<div class="flex flex-wrap gap-2 mt-auto">
+<span class="text-[9px] font-label uppercase tracking-widest bg-surface-container px-2.5 py-1 text-on-surface-variant border border-outline-variant/30">EDP</span>
+<span class="text-[9px] font-label uppercase tracking-widest bg-surface-container px-2.5 py-1 text-on-surface-variant border border-outline-variant/30">150ml</span>
+<span class="text-[9px] font-label uppercase tracking-widest bg-surface-container px-2.5 py-1 text-on-surface-variant border border-outline-variant/30">Partial</span>
+</div>
+<div class="mt-5 pt-4 border-t border-surface-container flex justify-between items-center text-[9px] font-label text-outline uppercase tracking-widest">
+<span>Post #825</span>
+<span class="font-bold text-primary">Omar F.</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Redesigned Security Advisory -->
+<section class="mt-24 px-6 lg:px-16 mb-16">
+<div class="max-w-3xl mx-auto bg-emerald-50/40 border border-emerald-900/5 rounded-2xl p-8 md:p-12 shadow-sm relative overflow-hidden">
+<div class="absolute top-0 right-0 -mr-8 -mt-8 w-48 h-48 bg-emerald-900/5 rounded-full blur-3xl"></div>
+<div class="relative z-10 flex flex-col items-center text-center md:items-start md:text-left gap-8">
+<div class="flex flex-col md:flex-row items-center md:items-start gap-6">
+<div class="w-16 h-16 rounded-full bg-white flex items-center justify-center shadow-sm border border-emerald-900/5 flex-shrink-0">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="verified_user" style="font-variation-settings: 'wght' 300;">verified_user</span>
+</div>
+<div class="space-y-4">
+<h4 class="font-headline font-bold text-primary text-3xl">Authenticity &amp; Safety</h4>
+<div class="space-y-3">
+<p class="text-sm font-body text-secondary leading-relaxed max-w-xl">
+                                The Olfactory Archive is a community registry. Please note that <span class="font-bold text-primary">all payments are off-platform</span> and are not mediated by PFC.
+                            </p>
+<p class="text-[11px] font-label uppercase tracking-widest text-outline font-bold">
+                                Direct Bank / EasyPaisa / JazzCash only. Verify seller credentials thoroughly.
+                            </p>
+</div>
+</div>
+</div>
+<div class="w-full pt-4 md:pt-2 border-t border-emerald-900/5 md:border-t-0">
+<button class="w-full md:w-auto bg-primary text-on-primary px-12 py-5 text-[10px] font-label font-bold uppercase tracking-[0.25em] hover:bg-emerald-900 transition-all shadow-xl shadow-primary/10 active:scale-95 duration-150">
+                        Safety Protocol
+                    </button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full flex flex-col items-center py-16 px-8 text-center bg-emerald-950 dark:bg-black text-amber-200">
+<div class="text-amber-200 font-serif italic text-2xl mb-8">The Olfactory Archive</div>
+<div class="flex flex-wrap justify-center gap-8 mb-10">
+<a class="text-slate-300 font-label uppercase font-bold text-[10px] tracking-widest hover:text-white transition-opacity" href="#">Terms of Curation</a>
+<a class="text-slate-300 font-label uppercase font-bold text-[10px] tracking-widest hover:text-white transition-opacity underline decoration-amber-200 underline-offset-4" href="#">Privacy</a>
+<a class="text-slate-300 font-label uppercase font-bold text-[10px] tracking-widest hover:text-white transition-opacity" href="#">Community Guidelines</a>
+</div>
+<p class="font-body text-[10px] uppercase tracking-widest leading-relaxed text-slate-500">© The Olfactory Archive (PFC). Authentic Fragrance Registry.</p>
+</footer>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center pb-safe pt-2 px-4 bg-surface/90 dark:bg-emerald-950/90 backdrop-blur-xl z-50 shadow-[0_-4px_20px_0_rgba(0,0,0,0.05)] md:hidden">
+<a class="flex flex-col items-center justify-center text-emerald-900 font-bold active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="storefront" style="font-variation-settings: 'FILL' 1;">storefront</span>
+<span class="text-[11px] font-medium font-label uppercase tracking-tight">Marketplace</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 hover:text-emerald-700 active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="verified_user">verified_user</span>
+<span class="text-[11px] font-medium font-label uppercase tracking-tight">Sellers</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 hover:text-emerald-700 active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+<span class="text-[11px] font-medium font-label uppercase tracking-tight">Archive</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 hover:text-emerald-700 active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="text-[11px] font-medium font-label uppercase tracking-tight">Profile</span>
+</a>
+</nav>
+<!-- FAB -->
+<button class="fixed bottom-24 right-8 w-16 h-16 bg-primary text-on-primary rounded-full flex items-center justify-center shadow-2xl active:scale-95 transition-transform z-40 md:bottom-8 hover:bg-emerald-900">
+<span class="material-symbols-outlined text-2xl" data-icon="add">add</span>
+</button>
+<!-- Filter Drawer Backdrop -->
+<div class="fixed inset-0 bg-black/40 backdrop-blur-sm z-[60] opacity-0 pointer-events-none transition-opacity duration-300" id="drawer-overlay"></div>
+<!-- Filter Drawer / Bottom Sheet -->
+<div class="fixed bottom-0 left-0 right-0 h-[85dvh] bg-surface-container-lowest z-[70] rounded-t-[2rem] shadow-[0_-10px_40px_rgba(0,0,0,0.1)] flex flex-col border-t border-primary/5" id="filter-drawer">
+<!-- Header -->
+<div class="flex items-center justify-between px-8 py-6 border-b border-surface-container">
+<h3 class="text-2xl font-headline font-bold text-primary">Refine Archive</h3>
+<button class="p-2 text-secondary hover:bg-surface-container rounded-full transition-colors" onclick="document.getElementById('filter-drawer').classList.remove('open')">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</div>
+<!-- Scrollable Content -->
+<div class="flex-grow overflow-y-auto px-8 py-8 space-y-10 hide-scrollbar pb-32">
+<!-- Price Range -->
+<div>
+<div class="flex justify-between items-end mb-4">
+<label class="font-label text-[11px] uppercase tracking-[0.2em] font-bold text-secondary">Price Range (PKR)</label>
+<span class="text-sm font-medium text-primary">Rs. 0 — Rs. 150,000+</span>
+</div>
+<div class="relative pt-2">
+<input class="w-full h-1 bg-surface-container rounded-lg cursor-pointer appearance-none" max="150000" min="0" step="1000" type="range"/>
+<div class="flex justify-between mt-3 text-[10px] text-outline uppercase tracking-tighter">
+<span>Entry</span>
+<span>Artisanal</span>
+<span>Luxury</span>
+<span>Masterpiece</span>
+</div>
+</div>
+</div>
+<!-- Maison / Brand -->
+<div>
+<label class="font-label text-[11px] uppercase tracking-[0.2em] font-bold text-secondary mb-4 block">Maison / Brand</label>
+<div class="grid grid-cols-2 gap-3">
+<button class="text-left px-4 py-3 bg-surface-container border border-primary/5 text-xs font-medium text-on-surface hover:bg-primary hover:text-white transition-all">Tom Ford</button>
+<button class="text-left px-4 py-3 bg-primary text-white border border-primary text-xs font-medium flex justify-between items-center transition-all">
+                    Creed <span class="material-symbols-outlined text-[14px]">check</span>
+</button>
+<button class="text-left px-4 py-3 bg-surface-container border border-primary/5 text-xs font-medium text-on-surface hover:bg-primary hover:text-white transition-all">Byredo</button>
+<button class="text-left px-4 py-3 bg-surface-container border border-primary/5 text-xs font-medium text-on-surface hover:bg-primary hover:text-white transition-all">Nishane</button>
+<button class="text-left px-4 py-3 bg-surface-container border border-primary/5 text-xs font-medium text-on-surface hover:bg-primary hover:text-white transition-all">Xerjoff</button>
+<button class="text-left px-4 py-3 bg-surface-container border border-primary/5 text-xs font-medium text-on-surface hover:bg-primary hover:text-white transition-all">Dior</button>
+</div>
+</div>
+<!-- Fragrance Family -->
+<div>
+<label class="font-label text-[11px] uppercase tracking-[0.2em] font-bold text-secondary mb-4 block">Fragrance Family</label>
+<div class="flex flex-wrap gap-2">
+<button class="px-5 py-2.5 rounded-full border border-outline-variant/50 text-[10px] uppercase font-bold tracking-widest text-secondary hover:border-primary hover:text-primary transition-all">Woody</button>
+<button class="px-5 py-2.5 rounded-full bg-primary/5 border border-primary/20 text-[10px] uppercase font-bold tracking-widest text-primary">Oriental</button>
+<button class="px-5 py-2.5 rounded-full border border-outline-variant/50 text-[10px] uppercase font-bold tracking-widest text-secondary hover:border-primary hover:text-primary transition-all">Floral</button>
+<button class="px-5 py-2.5 rounded-full border border-outline-variant/50 text-[10px] uppercase font-bold tracking-widest text-secondary hover:border-primary hover:text-primary transition-all">Citrus</button>
+<button class="px-5 py-2.5 rounded-full border border-outline-variant/50 text-[10px] uppercase font-bold tracking-widest text-secondary hover:border-primary hover:text-primary transition-all">Gourmand</button>
+</div>
+</div>
+<!-- Listing Type -->
+<div>
+<label class="font-label text-[11px] uppercase tracking-[0.2em] font-bold text-secondary mb-4 block">Listing Type</label>
+<div class="space-y-3">
+<label class="flex items-center gap-3 cursor-pointer group">
+<input checked="" class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary/20" type="checkbox"/>
+<span class="text-sm font-medium text-on-surface group-hover:text-primary transition-colors">Full Bottle</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary/20" type="checkbox"/>
+<span class="text-sm font-medium text-on-surface group-hover:text-primary transition-colors">Decant / Split</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary/20" type="checkbox"/>
+<span class="text-sm font-medium text-on-surface group-hover:text-primary transition-colors">Swap</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary/20" type="checkbox"/>
+<span class="text-sm font-medium text-on-surface group-hover:text-primary transition-colors">ISO (In Search Of)</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary/20" type="checkbox"/>
+<span class="text-sm font-medium text-on-surface group-hover:text-primary transition-colors">Auction</span>
+</label>
+</div>
+</div>
+<!-- Condition -->
+<div>
+<label class="font-label text-[11px] uppercase tracking-[0.2em] font-bold text-secondary mb-4 block">Condition</label>
+<div class="flex gap-4">
+<button class="flex-1 py-3 bg-surface-container-high border border-outline-variant/30 text-[10px] uppercase font-bold tracking-widest text-secondary">BNIB</button>
+<button class="flex-1 py-3 bg-primary text-on-primary text-[10px] uppercase font-bold tracking-widest">Partial</button>
+<button class="flex-1 py-3 bg-surface-container-high border border-outline-variant/30 text-[10px] uppercase font-bold tracking-widest text-secondary">Vintage</button>
+</div>
+</div>
+</div>
+<!-- Drawer Footer Actions -->
+<div class="absolute bottom-0 left-0 right-0 p-8 bg-surface-container-lowest/80 backdrop-blur-xl border-t border-surface-container flex gap-4">
+<button class="flex-1 py-5 border border-primary/20 text-primary font-label text-[10px] uppercase tracking-[0.3em] font-bold hover:bg-primary/5 active:scale-95 transition-all" onclick="document.getElementById('filter-drawer').classList.remove('open')">Reset All</button>
+<button class="flex-[2] py-5 bg-primary text-on-primary font-label text-[10px] uppercase tracking-[0.3em] font-bold shadow-2xl shadow-primary/20 hover:bg-emerald-900 active:scale-95 transition-all" onclick="document.getElementById('filter-drawer').classList.remove('open')">Show 124 Results</button>
+</div>
+</div>
+<script>
+    // Simple script to handle drawer toggle and backdrop
+    const drawer = document.getElementById('filter-drawer');
+    const overlay = document.getElementById('drawer-overlay');
+    
+    // Using a simple observer to trigger overlay opacity for better simulation
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                if (drawer.classList.contains('open')) {
+                    overlay.classList.remove('pointer-events-none');
+                    overlay.classList.add('opacity-100');
+                } else {
+                    overlay.classList.add('pointer-events-none');
+                    overlay.classList.remove('opacity-100');
+                }
+            }
+        });
+    });
+
+    observer.observe(drawer, { attributes: true });
+
+    overlay.onclick = () => drawer.classList.remove('open');
+</script>
+</body></html>

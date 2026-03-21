@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Seller Verification | THE OLFACTORY ARCHIVE</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Noto+Serif:ital,wght@0,400;0,700;1,400;1,700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "outline-variant": "#bfc9c3",
+              "primary": "#003527",
+              "on-primary-container": "#80bea6",
+              "on-secondary-fixed": "#121c2a",
+              "secondary": "#555f70",
+              "on-tertiary-fixed": "#261900",
+              "surface-container-high": "#e8e8ea",
+              "secondary-fixed-dim": "#bdc7db",
+              "on-surface": "#1a1c1e",
+              "tertiary-fixed": "#ffdea5",
+              "inverse-primary": "#95d3ba",
+              "on-primary-fixed": "#002117",
+              "on-tertiary-fixed-variant": "#5d4201",
+              "on-tertiary": "#ffffff",
+              "on-primary-fixed-variant": "#0b513d",
+              "surface-container-low": "#f3f3f6",
+              "secondary-container": "#d6e0f4",
+              "on-secondary-fixed-variant": "#3d4757",
+              "error": "#ba1a1a",
+              "surface-container-lowest": "#ffffff",
+              "tertiary-fixed-dim": "#e9c176",
+              "surface-dim": "#dadadc",
+              "surface-tint": "#2b6954",
+              "on-error-container": "#93000a",
+              "primary-fixed": "#b0f0d6",
+              "on-tertiary-container": "#d3ac64",
+              "tertiary-container": "#5a4000",
+              "surface-variant": "#e2e2e5",
+              "on-background": "#1a1c1e",
+              "inverse-surface": "#2f3133",
+              "on-secondary": "#ffffff",
+              "surface-container-highest": "#e2e2e5",
+              "surface": "#f9f9fc",
+              "tertiary": "#3e2b00",
+              "surface-container": "#eeeef0",
+              "outline": "#707974",
+              "on-secondary-container": "#596374",
+              "on-error": "#ffffff",
+              "error-container": "#ffdad6",
+              "on-surface-variant": "#404944",
+              "primary-container": "#064e3b",
+              "background": "#f9f9fc",
+              "surface-bright": "#f9f9fc",
+              "primary-fixed-dim": "#95d3ba",
+              "secondary-fixed": "#d9e3f7",
+              "on-primary": "#ffffff",
+              "inverse-on-surface": "#f0f0f3"
+            },
+            fontFamily: {
+              "headline": ["Noto Serif"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      .font-noto-serif { font-family: 'Noto Serif', serif; }
+      .font-inter { font-family: 'Inter', sans-serif; }
+      .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body text-on-surface antialiased">
+<!-- TopAppBar -->
+<nav class="fixed top-0 w-full px-6 py-4 flex justify-between items-center bg-surface/80 backdrop-blur-md z-50">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-emerald-900 cursor-pointer" data-icon="menu">menu</span>
+<span class="text-xl font-bold tracking-tighter text-emerald-900 font-noto-serif italic">THE OLFACTORY ARCHIVE</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden md:flex gap-8 text-slate-500 font-medium">
+<span class="hover:text-emerald-700 cursor-pointer">Archive</span>
+<span class="hover:text-emerald-700 cursor-pointer">Market</span>
+<span class="text-emerald-900 font-bold border-b-2 border-emerald-900">Verify</span>
+<span class="hover:text-emerald-700 cursor-pointer">Vault</span>
+</div>
+<div class="w-10 h-10 rounded-full bg-surface-container-high overflow-hidden border border-outline-variant/20">
+<img alt="Member Profile" class="w-full h-full object-cover" data-alt="Close up profile avatar of a person" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDV5oyyKtesbcO6SXBiZk6fsR2_FSWmkuKO1bxSEJmq3eTULYMtoseJHuljRTViQhOV31FnsmfI9DTME76GfmUB8ahEPUPNDoBEBtATNHAGTa0QU-YnWGSwTlxgTrJi1n5_8TLOcRxB--N3nm7Bf6sKzMmF-CB095rfqvMNW9O_FCc3oiP8WHOLK61WPCDyVL45Y2ziG6_2Zqw-TXKnmUGwDYql2WXnOEhEsENcZ-bwOYrHXXDu52cm89D0Pt6DzqhfZF-bT0E-Tlhv"/>
+</div>
+</div>
+</nav>
+<main class="pt-28 pb-32 px-6 max-w-5xl mx-auto">
+<!-- Header Section -->
+<header class="mb-16">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-tertiary-container/10 text-tertiary-container mb-4">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<span class="font-label text-xs uppercase tracking-widest font-bold">Seller Verification</span>
+</div>
+<h1 class="text-4xl md:text-6xl font-headline font-bold text-primary mb-6">Verification in Progress</h1>
+<p class="text-secondary max-w-2xl text-lg leading-relaxed">
+                Your credentials are being meticulously reviewed to maintain the integrity of our curated fragrance collective.
+            </p>
+</header>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+<!-- Left Column: Status & Progress -->
+<div class="lg:col-span-8 space-y-12">
+<!-- Status Card -->
+<section class="bg-surface-container-lowest p-8 rounded-lg shadow-sm relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-full -mr-16 -mt-16 transition-transform group-hover:scale-110"></div>
+<div class="flex items-start gap-6 relative z-10">
+<div class="flex-shrink-0 w-12 h-12 rounded bg-surface-container-low flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-3xl">hourglass_empty</span>
+</div>
+<div>
+<h3 class="font-headline text-xl font-bold mb-2">Review Status</h3>
+<p class="text-secondary leading-relaxed">Your application is currently being reviewed by an Admin. This process typically takes 2–4 business days for artisanal verification.</p>
+</div>
+</div>
+</section>
+<!-- Progress Tracker -->
+<section class="space-y-8">
+<h4 class="font-label text-xs uppercase tracking-widest font-bold text-secondary">Verification Roadmap</h4>
+<div class="relative flex flex-col md:flex-row justify-between items-start md:items-center gap-8 md:gap-0">
+<!-- Connecting Line -->
+<div class="absolute top-1/2 left-0 w-full h-[2px] bg-surface-container-highest hidden md:block -translate-y-1/2 -z-10"></div>
+<div class="absolute top-0 left-6 w-[2px] h-full bg-surface-container-highest block md:hidden -z-10"></div>
+<!-- Step 1: Submitted -->
+<div class="flex md:flex-col items-center gap-4 md:gap-4 bg-surface md:px-4">
+<div class="w-12 h-12 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-lg">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div class="text-left md:text-center">
+<span class="block font-bold text-primary">Submitted</span>
+<span class="text-xs text-secondary italic">Oct 24, 2023</span>
+</div>
+</div>
+<!-- Step 2: Under Review -->
+<div class="flex md:flex-col items-center gap-4 md:gap-4 bg-surface md:px-4">
+<div class="w-12 h-12 rounded-full border-4 border-primary bg-surface flex items-center justify-center animate-pulse">
+<span class="material-symbols-outlined text-primary">visibility</span>
+</div>
+<div class="text-left md:text-center">
+<span class="block font-bold text-primary">Under Review</span>
+<span class="text-xs text-secondary font-medium uppercase tracking-tighter">Current Phase</span>
+</div>
+</div>
+<!-- Step 3: Verified -->
+<div class="flex md:flex-col items-center gap-4 md:gap-4 bg-surface md:px-4 opacity-40">
+<div class="w-12 h-12 rounded-full border-2 border-outline-variant bg-surface-container-low flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">verified</span>
+</div>
+<div class="text-left md:text-center">
+<span class="block font-bold text-secondary">Verified</span>
+<span class="text-xs text-secondary">Final Access</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Admin Notes -->
+<section>
+<h4 class="font-label text-xs uppercase tracking-widest font-bold text-secondary mb-4">Admin Notes</h4>
+<div class="bg-surface-container-low p-6 border-l-4 border-primary-container min-h-[100px] flex items-center">
+<p class="text-on-surface-variant italic font-body">Pending review. Our curators will provide feedback if additional documentation is required.</p>
+</div>
+</section>
+<!-- Update Details Button -->
+<div class="flex flex-col sm:flex-row gap-4">
+<button class="bg-primary text-on-primary px-8 py-4 font-label uppercase tracking-widest text-xs font-bold hover:bg-primary-container transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">edit</span>
+                        Update Details
+                    </button>
+<button class="bg-surface-container-high text-on-surface px-8 py-4 font-label uppercase tracking-widest text-xs font-bold hover:bg-surface-container-highest transition-all">
+                        Withdraw Application
+                    </button>
+</div>
+</div>
+<!-- Right Column: Sidebar / FAQ -->
+<aside class="lg:col-span-4 space-y-8">
+<div class="bg-surface-container-highest/30 p-8 rounded-lg">
+<h3 class="font-headline text-xl font-bold mb-6">Verification FAQ</h3>
+<div class="space-y-6">
+<div class="group cursor-pointer">
+<h5 class="font-bold text-primary text-sm flex justify-between items-center group-hover:text-primary-container">
+                                What documentation is required?
+                                <span class="material-symbols-outlined text-sm">keyboard_arrow_right</span>
+</h5>
+<p class="text-xs text-secondary mt-2 leading-relaxed">We require proof of brand ownership or authorized distribution rights for vintage collections.</p>
+</div>
+<div class="group cursor-pointer">
+<h5 class="font-bold text-primary text-sm flex justify-between items-center group-hover:text-primary-container">
+                                How long is the vetting process?
+                                <span class="material-symbols-outlined text-sm">keyboard_arrow_right</span>
+</h5>
+<p class="text-xs text-secondary mt-2 leading-relaxed">Most reviews are completed in 72 hours, though complex heritage archives may take longer.</p>
+</div>
+<div class="group cursor-pointer">
+<h5 class="font-bold text-primary text-sm flex justify-between items-center group-hover:text-primary-container">
+                                Can I sell before verification?
+                                <span class="material-symbols-outlined text-sm">keyboard_arrow_right</span>
+</h5>
+<p class="text-xs text-secondary mt-2 leading-relaxed">To ensure buyer trust, listing capabilities are unlocked only after the 'Verified' status is achieved.</p>
+</div>
+</div>
+<div class="mt-8 pt-8 border-t border-outline-variant/30 text-center">
+<p class="text-xs text-secondary mb-4">Need immediate assistance?</p>
+<a class="text-primary font-bold text-sm underline underline-offset-4 decoration-primary/30 hover:decoration-primary" href="#">Contact Curator Support</a>
+</div>
+</div>
+<div class="p-8 bg-primary text-on-primary rounded-lg relative overflow-hidden">
+<div class="absolute -right-4 -bottom-4 opacity-10">
+<span class="material-symbols-outlined text-[120px]">workspace_premium</span>
+</div>
+<h4 class="font-headline font-bold text-lg mb-2 relative z-10">Gold Sillage Status</h4>
+<p class="text-sm opacity-80 mb-4 relative z-10 leading-relaxed">Once verified, your profile will be eligible for heritage badges and community salon privileges.</p>
+<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label text-[10px] font-bold uppercase tracking-tighter relative z-10">
+                        Heritage Ready
+                    </span>
+</div>
+</aside>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center pb-safe px-4 bg-white/90 backdrop-blur-xl z-50 shadow-[0_-4px_20px_0_rgba(0,0,0,0.05)] border-t border-emerald-900/10 h-16">
+<div class="flex flex-col items-center justify-center text-slate-400 pt-2">
+<span class="material-symbols-outlined" data-icon="auto_stories">auto_stories</span>
+<span class="font-inter text-[10px] uppercase tracking-widest font-bold mt-1">Archive</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-400 pt-2">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+<span class="font-inter text-[10px] uppercase tracking-widest font-bold mt-1">Market</span>
+</div>
+<div class="flex flex-col items-center justify-center text-emerald-900 border-t-2 border-emerald-900 pt-2">
+<span class="material-symbols-outlined" data-icon="verified_user" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<span class="font-inter text-[10px] uppercase tracking-widest font-bold mt-1">Verify</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-400 pt-2">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+<span class="font-inter text-[10px] uppercase tracking-widest font-bold mt-1">Vault</span>
+</div>
+</nav>
+</body></html>

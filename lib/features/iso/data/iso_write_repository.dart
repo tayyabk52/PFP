@@ -25,7 +25,6 @@ class IsoWriteRepository {
   Future<void> publishIso(String isoId) async {
     await supabase.from('listings').update({
       'status': 'Published',
-      'published_at': DateTime.now().toUtc().toIso8601String(),
     }).eq('id', isoId);
   }
 

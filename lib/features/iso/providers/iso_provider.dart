@@ -28,6 +28,16 @@ final myIsoPostsProvider =
   return ref.read(isoRepositoryProvider).getMyIsos(user.id);
 });
 
+// ─── ISO posts for a specific user (public profile) ──────────────────────────
+
+/// Published ISO posts for any user — used on their public profile page.
+final isoPostsForUserProvider =
+    FutureProvider.autoDispose.family<List<IsoPost>, String>(
+  (ref, userId) async {
+    return ref.read(isoRepositoryProvider).getPublishedIsosForUser(userId);
+  },
+);
+
 // ─── Single ISO detail ────────────────────────────────────────────────────────
 
 /// Provides a single ISO post by its id.

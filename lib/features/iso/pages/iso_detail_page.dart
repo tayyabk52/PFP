@@ -331,7 +331,10 @@ class _IsoDetailPageState extends ConsumerState<IsoDetailPage> {
         const SizedBox(height: 24),
 
         // Posted-by row
-        _buildPostedByRow(iso),
+        GestureDetector(
+          onTap: () => context.push('/u/${iso.sellerId}'),
+          child: _buildPostedByRow(iso),
+        ),
 
         Divider(
           color: AppColors.ghostBorderBase.withValues(alpha: 0.15),
@@ -822,26 +825,31 @@ class _OfferCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 10),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    name,
-                    style: GoogleFonts.inter(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.onBackground,
-                    ),
-                  ),
-                  if (seller?.city != null)
+              GestureDetector(
+                onTap: seller?.id != null
+                    ? () => context.push('/u/${seller!.id}')
+                    : null,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                     Text(
-                      seller!.city!,
+                      name,
                       style: GoogleFonts.inter(
-                        fontSize: 11,
-                        color: AppColors.textSecondary,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.onBackground,
                       ),
                     ),
-                ],
+                    if (seller?.city != null)
+                      Text(
+                        seller!.city!,
+                        style: GoogleFonts.inter(
+                          fontSize: 11,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                  ],
+                ),
               ),
               const Spacer(),
               _buildStatusBadge(offer.status),

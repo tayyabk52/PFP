@@ -23,6 +23,7 @@ import '../../features/iso/pages/iso_board_page.dart';
 import '../../features/iso/pages/iso_create_page.dart';
 import '../../features/iso/pages/iso_detail_page.dart';
 import '../../features/iso/pages/my_iso_posts_page.dart';
+import '../../features/profile/pages/user_profile_page.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   final routerNotifier = _RouterNotifier(ref);
@@ -76,6 +77,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/iso', builder: (_, __) => const IsoBoardPage()),
       GoRoute(path: '/iso/create', builder: (_, state) => IsoCreatePage(existingIsoId: state.uri.queryParameters['existingId'])),
       GoRoute(path: '/iso/:id', builder: (_, state) => IsoDetailPage(isoId: state.pathParameters['id']!)),
+      GoRoute(path: '/u/:userId', builder: (_, state) => UserProfilePage(userId: state.pathParameters['userId']!)),
 
       // --- Dashboard (auth-gated, AppShell) ---
       ShellRoute(

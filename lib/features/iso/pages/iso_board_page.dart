@@ -72,23 +72,54 @@ class _IsoCard extends StatelessWidget {
             // ── Bottom row: poster + city + time ──────────────────────────
             Row(
               children: [
-                Text(
-                  iso.poster?.displayNameOrFallback ?? 'Anonymous',
-                  style: GoogleFonts.inter(
-                    fontSize: 12,
-                    color: AppColors.primary,
-                  ),
-                ),
-                if (iso.poster?.city != null &&
-                    iso.poster!.city!.isNotEmpty) ...[
+                if (iso.poster != null)
+                  GestureDetector(
+                    onTap: iso.poster?.id != null
+                        ? () => context.push('/u/${iso.poster!.id}')
+                        : null,
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 10,
+                          backgroundColor:
+                              AppColors.primary.withValues(alpha: 0.12),
+                          child: Text(
+                            _initials(iso.poster!.displayNameOrFallback),
+                            style: GoogleFonts.inter(
+                              fontSize: 8,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.primary,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          iso.poster!.displayNameOrFallback,
+                          style: GoogleFonts.inter(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                        if (iso.poster?.city != null) ...[
+                          Text(' · ',
+                              style: GoogleFonts.inter(
+                                  fontSize: 11, color: AppColors.textMuted)),
+                          Text(iso.poster!.city!,
+                              style: GoogleFonts.inter(
+                                  fontSize: 11, color: AppColors.textMuted)),
+                        ],
+                      ],
+                    ),
+                  )
+                else
                   Text(
-                    ' · ${iso.poster!.city}',
+                    'Anonymous',
                     style: GoogleFonts.inter(
-                      fontSize: 12,
+                      fontSize: 11,
                       color: AppColors.textSecondary,
                     ),
                   ),
-                ],
                 const Spacer(),
                 Text(
                   _timeAgo(iso.createdAt),
@@ -152,6 +183,12 @@ class _IsoCard extends StatelessWidget {
       return '${ml.toInt()} ml';
     }
     return '$ml ml';
+  }
+
+  String _initials(String name) {
+    final parts = name.trim().split(RegExp(r'\s+'));
+    if (parts.length >= 2) return '${parts[0][0]}${parts[1][0]}'.toUpperCase();
+    return name.isNotEmpty ? name[0].toUpperCase() : '?';
   }
 }
 

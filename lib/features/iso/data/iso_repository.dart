@@ -58,6 +58,21 @@ class IsoRepository {
         .toList();
   }
 
+  /// Fetches published ISO posts for any user (for their public profile).
+  Future<List<IsoPost>> getPublishedIsosForUser(String userId) async {
+    final response = await supabase
+        .from('listings')
+        .select(_isoSelect)
+        .eq('seller_id', userId)
+        .eq('listing_type', 'ISO')
+        .eq('status', 'Published')
+        .order('published_at', ascending: false);
+
+    return (response as List<dynamic>)
+        .map((m) => IsoPost.fromMap(m as Map<String, dynamic>))
+        .toList();
+  }
+
   Future<IsoPost?> getIso(String id) async {
     final response = await supabase
         .from('listings')

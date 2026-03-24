@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
+import '../../features/auth/data/auth_repository.dart';
 
 class _NavItem {
   final String label;
@@ -10,12 +11,13 @@ class _NavItem {
   const _NavItem(this.label, this.icon, this.route);
 }
 
-const _memberItems = [
-  _NavItem('Marketplace', Icons.storefront_outlined, '/marketplace'),
+const _sellerItems = [
+  _NavItem('Market', Icons.storefront_outlined, '/marketplace'),
   _NavItem('Dashboard', Icons.grid_view_outlined, '/dashboard'),
   _NavItem('My Listings', Icons.list_alt_outlined, '/dashboard/my-listings'),
   _NavItem('Messages', Icons.mail_outline_rounded, '/dashboard/messages'),
-  _NavItem('ISO Posts', Icons.search_outlined, '/dashboard/iso'),
+  _NavItem('ISO Board', Icons.search_outlined, '/iso'),
+  _NavItem('My ISO Posts', Icons.inbox_outlined, '/dashboard/iso'),
   _NavItem('Reports', Icons.flag_outlined, '/dashboard/reports'),
   _NavItem('Knowledge', Icons.menu_book_outlined, '/knowledge'),
   _NavItem('Sellers', Icons.verified_outlined, '/sellers'),
@@ -32,12 +34,21 @@ const _adminItems = [
 
 class SidebarNav extends StatelessWidget {
   final bool isAdmin;
+  final bool isSeller;
   final bool collapsed; // tablet: icon-only mode
-  const SidebarNav({super.key, this.isAdmin = false, this.collapsed = false});
+  /// 'Pending', 'Approved', 'Rejected', or null (no application).
+  final String? applicationStatus;
+  const SidebarNav({
+    super.key,
+    this.isAdmin = false,
+    this.isSeller = false,
+    this.collapsed = false,
+    this.applicationStatus,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final items = isAdmin ? _adminItems : _memberItems;
+    final items = _buildItems();
     String location = '';
     try {
       location = GoRouterState.of(context).uri.toString();
@@ -122,9 +133,68 @@ class SidebarNav extends StatelessWidget {
               collapsed: collapsed,
             ),
           ),
+
+          // Sign out
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8, 0, 8, 12),
+            child: collapsed
+                ? IconButton(
+                    icon: const Icon(Icons.logout_rounded,
+                        size: 20, color: AppColors.textMuted),
+                    tooltip: 'Sign out',
+                    onPressed: () => _signOut(context),
+                  )
+                : ListTile(
+                    dense: true,
+                    leading: const Icon(Icons.logout_rounded,
+                        size: 20, color: AppColors.textMuted),
+                    title: Text(
+                      'Sign out',
+                      style: AppTextStyles.bodyMd
+                          .copyWith(color: AppColors.textMuted),
+                    ),
+                    onTap: () => _signOut(context),
+                  ),
+          ),
         ],
       ),
     );
+  }
+
+  Future<void> _signOut(BuildContext context) async {
+    await AuthRepository().signOut();
+    if (context.mounted) context.go('/');
+  }
+
+  List<_NavItem> _buildItems() {
+    if (isAdmin) return _adminItems;
+
+    if (isSeller) return _sellerItems;
+
+    // Member items — no "My Listings"; only show verification when applied
+    final items = <_NavItem>[
+      const _NavItem('Market', Icons.storefront_outlined, '/marketplace'),
+      const _NavItem('Dashboard', Icons.grid_view_outlined, '/dashboard'),
+      if (applicationStatus != null) _verificationNavItem(),
+      const _NavItem('Messages', Icons.mail_outline_rounded, '/dashboard/messages'),
+      const _NavItem('ISO Board', Icons.search_outlined, '/iso'),
+      const _NavItem('My ISO Posts', Icons.inbox_outlined, '/dashboard/iso'),
+      const _NavItem('Reports', Icons.flag_outlined, '/dashboard/reports'),
+      const _NavItem('Knowledge', Icons.menu_book_outlined, '/knowledge'),
+      const _NavItem('Sellers', Icons.verified_outlined, '/sellers'),
+    ];
+    return items;
+  }
+
+  _NavItem _verificationNavItem() {
+    return switch (applicationStatus) {
+      'Pending' => const _NavItem(
+          'Verification', Icons.hourglass_top_rounded, '/dashboard/verification'),
+      'Rejected' => const _NavItem(
+          'Reapply', Icons.refresh_rounded, '/dashboard/verification'),
+      _ => const _NavItem(
+          'Become Seller', Icons.storefront_outlined, '/register/seller-apply'),
+    };
   }
 }
 

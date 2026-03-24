@@ -25,6 +25,26 @@ Widget buildField({
   );
 }
 
+/// Opens the dropdown, selects 'Other...', and resets the viewport.
+/// Sets a tall viewport BEFORE opening so all 47 items are visible without scrolling.
+/// Call this instead of manually tapping the dropdown + tapping 'Other...'.
+Future<void> selectOther(WidgetTester tester) async {
+  // Set tall viewport first so all items fit when the dropdown opens.
+  tester.view.physicalSize = const Size(1080, 16000);
+  tester.view.devicePixelRatio = 1.0;
+  await tester.pump();
+  // Open the dropdown fresh (viewport is already expanded).
+  await tester.tap(find.byType(DropdownButtonFormField<String>));
+  await tester.pumpAndSettle();
+  // 'Other...' is now visible — tap it.
+  await tester.tap(find.text('Other...').last);
+  await tester.pumpAndSettle();
+  // Reset viewport.
+  tester.view.resetPhysicalSize();
+  tester.view.resetDevicePixelRatio();
+  await tester.pumpAndSettle();
+}
+
 void main() {
   group('PakistanCityField', () {
     testWidgets('renders dropdown with correct label', (tester) async {
@@ -66,22 +86,18 @@ void main() {
       await tester.tap(find.byType(DropdownButtonFormField<String>));
       await tester.pumpAndSettle();
 
-      // Select 'Karachi'
-      await tester.tap(find.text('Karachi').last);
+      // Select 'Bahawalpur' (near top of list, always visible in test viewport)
+      await tester.tap(find.text('Bahawalpur').last);
       await tester.pumpAndSettle();
 
-      expect(emitted, 'Karachi');
+      expect(emitted, 'Bahawalpur');
     });
 
     testWidgets('shows free-text field when Other... is selected',
         (tester) async {
       await tester.pumpWidget(buildField());
 
-      await tester.tap(find.byType(DropdownButtonFormField<String>));
-      await tester.pumpAndSettle();
-
-      await tester.tap(find.text('Other...').last);
-      await tester.pumpAndSettle();
+      await selectOther(tester);
 
       expect(find.byKey(const Key('city_other_text_field')), findsOneWidget);
     });
@@ -91,10 +107,7 @@ void main() {
       String? emitted;
       await tester.pumpWidget(buildField(onChanged: (v) => emitted = v));
 
-      await tester.tap(find.byType(DropdownButtonFormField<String>));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Other...').last);
-      await tester.pumpAndSettle();
+      await selectOther(tester);
 
       await tester.enterText(
           find.byKey(const Key('city_other_text_field')), '  Turbat  ');
@@ -108,10 +121,7 @@ void main() {
       String? emitted = 'initial';
       await tester.pumpWidget(buildField(onChanged: (v) => emitted = v));
 
-      await tester.tap(find.byType(DropdownButtonFormField<String>));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Other...').last);
-      await tester.pumpAndSettle();
+      await selectOther(tester);
 
       // Text field is empty — widget should emit null
       expect(emitted, isNull);
@@ -158,10 +168,7 @@ void main() {
       ));
 
       // Select Other...
-      await tester.tap(find.byType(DropdownButtonFormField<String>));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Other...').last);
-      await tester.pumpAndSettle();
+      await selectOther(tester);
 
       formKey.currentState!.validate();
       await tester.pump();
@@ -197,20 +204,20 @@ void main() {
       await tester.pumpWidget(buildField(onChanged: (v) => emitted = v));
 
       // Select Other... first
-      await tester.tap(find.byType(DropdownButtonFormField<String>));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Other...').last);
-      await tester.pumpAndSettle();
+      await selectOther(tester);
       expect(find.byKey(const Key('city_other_text_field')), findsOneWidget);
 
-      // Now select a named city
+      // Now select a named city. Use 'Wah Cantt' (second-to-last item) because after
+      // 'Other...' is selected, the dropdown opens scrolled to the bottom — items near
+      // the end of the list are visible, items near the top are not.
+      await tester.pumpAndSettle();
       await tester.tap(find.byType(DropdownButtonFormField<String>));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Sialkot').last);
+      await tester.tap(find.text('Wah Cantt').last);
       await tester.pumpAndSettle();
 
       expect(find.byKey(const Key('city_other_text_field')), findsNothing);
-      expect(emitted, 'Sialkot');
+      expect(emitted, 'Wah Cantt');
     });
   });
 }

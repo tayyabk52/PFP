@@ -36,6 +36,7 @@ class _IsoCreatePageState extends ConsumerState<IsoCreatePage> {
     _isEditMode = widget.existingIsoId != null;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
       final user = ref.read(currentUserProvider);
       if (user == null) {
         context.go('/login?redirect=/iso/create');
@@ -105,6 +106,7 @@ class _IsoCreatePageState extends ConsumerState<IsoCreatePage> {
               ? null
               : _notesCtrl.text.trim(),
         });
+        ref.invalidate(isoDetailProvider(widget.existingIsoId!));
         if (mounted) context.go('/iso/${widget.existingIsoId}');
       } else {
         final isoId = await writeRepo.createIso(

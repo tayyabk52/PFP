@@ -4,17 +4,24 @@ abstract class RouteGuards {
   static const _protectedDashboardPrefix = '/dashboard';
   static const _adminPrefix = '/admin';
   static const _sellerApplyRoute = '/register/seller-apply';
-  static const _sellerCreateListing = '/dashboard/create-listing';
+  static const _verificationRoute = '/dashboard/verification';
+  static const _myListingsRoute = '/dashboard/my-listings';
 
   /// Returns a redirect path, or null if navigation is allowed.
+  ///
+  /// [applicationStatus] is the seller application status:
+  /// 'Pending', 'Approved', 'Rejected', or null (no application).
   static String? getRedirect({
     required String location,
     required String? role,
     required bool isAuthenticated,
-    required bool hasSellerApplication,
+    required bool profileSetupComplete,
+    String? applicationStatus,
   }) {
     final isAdmin = role == 'admin';
     final isSeller = role == 'seller';
+    final hasApplication = applicationStatus != null;
+    final isRejected = applicationStatus == 'Rejected';
 
     // Unauthenticated guards
     if (!isAuthenticated) {
@@ -24,17 +31,36 @@ abstract class RouteGuards {
       return null;
     }
 
+    // Authenticated but profile setup not complete → must pick a role first.
+    // Allow /register, /register/seller-apply, and /dashboard/verification
+    // through so users can complete setup or check their application status.
+    if (!profileSetupComplete &&
+        location != '/register' &&
+        location != _sellerApplyRoute &&
+        location != _verificationRoute) {
+      return '/register';
+    }
+
+    // Authenticated users should not linger on login or landing pages
+    if (location == '/login' || location == '/') {
+      return isAdmin ? '/admin' : '/dashboard';
+    }
+
     // Admin-only routes
     if (location.startsWith(_adminPrefix) && !isAdmin) return '/dashboard';
 
-    // Seller-only routes
-    if (location == _sellerCreateListing && !isSeller && !isAdmin) {
+    // My Listings is seller-only — members should not access it
+    if (location.startsWith(_myListingsRoute) && !isSeller && !isAdmin) {
       return '/dashboard';
     }
 
-    // Seller apply — redirect if already has an application or is already a seller
+    // Seller apply — redirect based on application status
     if (location == _sellerApplyRoute) {
-      if (isSeller || hasSellerApplication) return '/dashboard/verification';
+      // Already a seller → go to verification (shows "Approved" status)
+      if (isSeller) return _verificationRoute;
+      // Has a pending application → go to verification status page
+      if (hasApplication && !isRejected) return _verificationRoute;
+      // Rejected or no application → allow access to reapply/apply
       return null;
     }
 

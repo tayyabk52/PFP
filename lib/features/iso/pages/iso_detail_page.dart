@@ -562,6 +562,7 @@ class _IsoDetailPageState extends ConsumerState<IsoDetailPage> {
                 TextButton(
                   onPressed: () async {
                     await ref.read(isoWriteRepositoryProvider).withdrawOffer(myOffer.id);
+                    if (!mounted) return;
                     ref.invalidate(myIsoOfferProvider(widget.isoId));
                     ref.invalidate(isoOffersProvider(widget.isoId));
                   },
@@ -603,12 +604,14 @@ class _IsoDetailPageState extends ConsumerState<IsoDetailPage> {
 
   Future<void> _acceptOffer(String offerId) async {
     await ref.read(isoWriteRepositoryProvider).acceptOffer(offerId, widget.isoId);
+    if (!mounted) return;
     ref.invalidate(isoDetailProvider(widget.isoId));
     ref.invalidate(isoOffersProvider(widget.isoId));
   }
 
   Future<void> _declineOffer(String offerId) async {
     await ref.read(isoWriteRepositoryProvider).declineOffer(offerId);
+    if (!mounted) return;
     ref.invalidate(isoOffersProvider(widget.isoId));
   }
 
@@ -617,95 +620,24 @@ class _IsoDetailPageState extends ConsumerState<IsoDetailPage> {
   // ---------------------------------------------------------------------------
 
   void _showOfferBottomSheet() {
-    final msgCtrl = TextEditingController();
-    final amtCtrl = TextEditingController();
-
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: AppColors.surface,
-      builder: (ctx) => Padding(
-        padding: EdgeInsets.fromLTRB(
-            24, 24, 24, MediaQuery.of(ctx).viewInsets.bottom + 24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'SUBMIT AN OFFER',
-              style: GoogleFonts.inter(
-                fontSize: 10,
-                fontWeight: FontWeight.w700,
-                letterSpacing: 2.5,
-                color: AppColors.textSecondary,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              "Let the member know you have what they're looking for.",
-              style: GoogleFonts.inter(fontSize: 13, color: AppColors.textSecondary),
-            ),
-            const SizedBox(height: 20),
-            TextField(
-              controller: msgCtrl,
-              decoration: const InputDecoration(
-                hintText: 'Your message (optional)',
-                filled: true,
-                fillColor: AppColors.surfaceContainerLow,
-                border: OutlineInputBorder(borderSide: BorderSide.none),
-              ),
-              maxLines: 3,
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: amtCtrl,
-              decoration: const InputDecoration(
-                hintText: 'Your asking price in PKR (optional)',
-                filled: true,
-                fillColor: AppColors.surfaceContainerLow,
-                border: OutlineInputBorder(borderSide: BorderSide.none),
-              ),
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(height: 20),
-            SizedBox(
-              width: double.infinity,
-              height: 52,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: Colors.white,
-                  elevation: 0,
-                  shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.zero),
-                ),
-                onPressed: () async {
-                  final user = ref.read(currentUserProvider);
-                  if (user == null) return;
-                  Navigator.of(ctx).pop(); // close sheet first
-                  await ref.read(isoWriteRepositoryProvider).submitOffer(
-                        isoId: widget.isoId,
-                        sellerId: user.id,
-                        message: msgCtrl.text.trim().isEmpty
-                            ? null
-                            : msgCtrl.text.trim(),
-                        offerAmount: int.tryParse(amtCtrl.text.trim()),
-                      );
-                  ref.invalidate(isoOffersProvider(widget.isoId));
-                  ref.invalidate(myIsoOfferProvider(widget.isoId));
-                },
-                child: Text(
-                  'SEND OFFER',
-                  style: GoogleFonts.inter(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 2.5,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
+      builder: (ctx) => _OfferBottomSheet(
+        onSend: (message, amount) async {
+          final user = ref.read(currentUserProvider);
+          if (user == null) return;
+          await ref.read(isoWriteRepositoryProvider).submitOffer(
+                isoId: widget.isoId,
+                sellerId: user.id,
+                message: message,
+                offerAmount: amount,
+              );
+          if (!mounted) return;
+          ref.invalidate(isoOffersProvider(widget.isoId));
+          ref.invalidate(myIsoOfferProvider(widget.isoId));
+        },
       ),
     );
   }
@@ -727,6 +659,115 @@ class _IsoDetailPageState extends ConsumerState<IsoDetailPage> {
     } else {
       return 'just now';
     }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// _OfferBottomSheet — StatefulWidget that owns its TextEditingControllers
+// ---------------------------------------------------------------------------
+
+class _OfferBottomSheet extends StatefulWidget {
+  final Future<void> Function(String? message, int? amount) onSend;
+
+  const _OfferBottomSheet({required this.onSend});
+
+  @override
+  State<_OfferBottomSheet> createState() => _OfferBottomSheetState();
+}
+
+class _OfferBottomSheetState extends State<_OfferBottomSheet> {
+  final _msgCtrl = TextEditingController();
+  final _amtCtrl = TextEditingController();
+  bool _sending = false;
+
+  @override
+  void dispose() {
+    _msgCtrl.dispose();
+    _amtCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+          24, 24, 24, MediaQuery.of(context).viewInsets.bottom + 24),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'SUBMIT AN OFFER',
+            style: GoogleFonts.inter(
+              fontSize: 10,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 2.5,
+              color: AppColors.textSecondary,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            "Let the member know you have what they're looking for.",
+            style: GoogleFonts.inter(fontSize: 13, color: AppColors.textSecondary),
+          ),
+          const SizedBox(height: 20),
+          TextField(
+            controller: _msgCtrl,
+            decoration: const InputDecoration(
+              hintText: 'Your message (optional)',
+              filled: true,
+              fillColor: AppColors.surfaceContainerLow,
+              border: OutlineInputBorder(borderSide: BorderSide.none),
+            ),
+            maxLines: 3,
+          ),
+          const SizedBox(height: 12),
+          TextField(
+            controller: _amtCtrl,
+            decoration: const InputDecoration(
+              hintText: 'Your asking price in PKR (optional)',
+              filled: true,
+              fillColor: AppColors.surfaceContainerLow,
+              border: OutlineInputBorder(borderSide: BorderSide.none),
+            ),
+            keyboardType: TextInputType.number,
+          ),
+          const SizedBox(height: 20),
+          SizedBox(
+            width: double.infinity,
+            height: 52,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                foregroundColor: Colors.white,
+                elevation: 0,
+                shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.zero),
+              ),
+              onPressed: _sending
+                  ? null
+                  : () async {
+                      setState(() => _sending = true);
+                      final message = _msgCtrl.text.trim().isEmpty
+                          ? null
+                          : _msgCtrl.text.trim();
+                      final amount = int.tryParse(_amtCtrl.text.trim());
+                      Navigator.of(context).pop();
+                      await widget.onSend(message, amount);
+                    },
+              child: Text(
+                'SEND OFFER',
+                style: GoogleFonts.inter(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 2.5,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 

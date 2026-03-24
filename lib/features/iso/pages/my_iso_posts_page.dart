@@ -110,8 +110,11 @@ class _MyIsoPostsPageState extends ConsumerState<MyIsoPostsPage> {
         final drafts = isos
             .where((i) => i.status == ListingStatus.draft)
             .toList();
+        final fulfilled = isos
+            .where((i) => i.status == ListingStatus.sold)
+            .toList();
 
-        if (published.isEmpty && drafts.isEmpty) {
+        if (published.isEmpty && drafts.isEmpty && fulfilled.isEmpty) {
           return _buildEmptyState();
         }
 
@@ -149,12 +152,37 @@ class _MyIsoPostsPageState extends ConsumerState<MyIsoPostsPage> {
               ...drafts.map((iso) => _MyIsoCard(
                     iso: iso,
                     onPublish: (isoId) async {
-                      await ref
-                          .read(isoWriteRepositoryProvider)
-                          .publishIso(isoId);
-                      ref.invalidate(myIsoPostsProvider);
+                      try {
+                        await ref
+                            .read(isoWriteRepositoryProvider)
+                            .publishIso(isoId);
+                        if (!mounted) return;
+                        ref.invalidate(myIsoPostsProvider);
+                      } catch (_) {
+                        if (!mounted) return;
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content:
+                                  Text('Failed to publish. Please try again.')),
+                        );
+                      }
                     },
                   )),
+            ],
+            if (fulfilled.isNotEmpty) ...[
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),
+                child: Text(
+                  'FULFILLED',
+                  style: GoogleFonts.inter(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 2.5,
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+              ),
+              ...fulfilled.map((iso) => _MyIsoCard(iso: iso)),
             ],
           ],
         );

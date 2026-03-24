@@ -204,9 +204,9 @@ class _FilterBarDelegate extends SliverPersistentHeaderDelegate {
   String _pillLabel(ListingType t) => switch (t) {
         ListingType.fullBottle => 'Full Bottles',
         ListingType.decantSplit => 'Decants',
-        ListingType.iso => 'ISO',
         ListingType.swap => 'Swaps',
         ListingType.auction => 'Auctions',
+        ListingType.iso => throw StateError('ISO is not a marketplace pill'),
       };
 }
 

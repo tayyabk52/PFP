@@ -231,7 +231,18 @@ class _IsoBoardPageState extends ConsumerState<IsoBoardPage> {
     final user = ref.watch(currentUserProvider);
     final isosAsync = ref.watch(isoBoardProvider(_keyword));
 
-    return Scaffold(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) {
+          if (context.canPop()) {
+            context.pop();
+          } else {
+            context.go('/marketplace');
+          }
+        }
+      },
+      child: Scaffold(
       backgroundColor: AppColors.surface,
       floatingActionButton: user != null
           ? FloatingActionButton.extended(
@@ -397,6 +408,7 @@ class _IsoBoardPageState extends ConsumerState<IsoBoardPage> {
           const SliverToBoxAdapter(child: SizedBox(height: 80)),
         ],
       ),
+    ),
     );
   }
 }

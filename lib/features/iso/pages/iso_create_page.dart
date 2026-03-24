@@ -135,7 +135,18 @@ class _IsoCreatePageState extends ConsumerState<IsoCreatePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) {
+          if (context.canPop()) {
+            context.pop();
+          } else {
+            context.go('/iso');
+          }
+        }
+      },
+      child: Scaffold(
       backgroundColor: AppColors.surface,
       appBar: AppBar(
         backgroundColor: AppColors.surface.withValues(alpha: 0.9),
@@ -349,6 +360,7 @@ class _IsoCreatePageState extends ConsumerState<IsoCreatePage> {
           ),
         ),
       ),
+    ),
     );
   }
 

@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import '../../marketplace/data/models/listing_model.dart';
 
 enum IsoOfferStatus {
@@ -14,6 +16,7 @@ enum IsoOfferStatus {
           orElse: () => IsoOfferStatus.pending);
 }
 
+@immutable
 class IsoPost {
   final String id;
   final String sellerId;
@@ -21,6 +24,8 @@ class IsoPost {
   final String fragranceName;
   final String brand;
   final double sizeMl;
+  /// Stored as [price_pkr] in the database. Represents the poster's max budget.
+  /// Zero means no budget specified (flexible).
   final int budgetPkr;
   final String? notes;
   final ListingStatus status;
@@ -64,6 +69,7 @@ class IsoPost {
   }
 }
 
+@immutable
 class IsoOffer {
   final String id;
   final String isoId;
@@ -92,7 +98,9 @@ class IsoOffer {
       isoId: map['iso_id'] as String,
       sellerId: map['seller_id'] as String,
       message: map['message'] as String?,
-      offerAmount: map['offer_amount'] as int?,
+      offerAmount: map['offer_amount'] != null
+          ? (map['offer_amount'] as num).toInt()
+          : null,
       status: IsoOfferStatus.fromString(map['status'] as String? ?? 'pending'),
       createdAt: DateTime.parse(map['created_at'] as String),
       seller: profilesRaw != null ? SellerInfo.fromMap(profilesRaw) : null,

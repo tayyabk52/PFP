@@ -59,14 +59,10 @@ class IsoWriteRepository {
   }
 
   Future<void> acceptOffer(String offerId, String isoId) async {
-    await supabase
-        .from('iso_offers')
-        .update({'status': 'accepted'})
-        .eq('id', offerId);
-    await supabase
-        .from('listings')
-        .update({'status': 'Sold'})
-        .eq('id', isoId);
+    await supabase.rpc('accept_iso_offer', params: {
+      'p_offer_id': offerId,
+      'p_iso_id': isoId,
+    });
   }
 
   Future<void> declineOffer(String offerId) async {

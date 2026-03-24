@@ -1,3 +1,5 @@
+import 'package:supabase_flutter/supabase_flutter.dart' show CountOption;
+
 import '../../../core/supabase/supabase_client.dart';
 import 'iso_model.dart';
 
@@ -90,11 +92,11 @@ class IsoRepository {
   }
 
   Future<int> getUnreadNotificationsCount(String userId) async {
-    final response = await supabase
+    final count = await supabase
         .from('iso_notifications')
-        .select('id')
+        .count(CountOption.exact)
         .eq('recipient_id', userId)
         .isFilter('read_at', null);
-    return (response as List).length;
+    return count;
   }
 }

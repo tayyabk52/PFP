@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
+import '../auth/providers/auth_provider.dart';
 
-/// Temporary landing page — shows PFC branding and auth entry points.
-/// Replace with full hero/listings design in a future build step.
-class LandingPage extends StatelessWidget {
+/// Landing page — shows PFC branding and auth entry points.
+/// While the session is being restored shows a loading indicator instead of
+/// sign-in/register buttons so the user doesn't attempt to re-authenticate.
+class LandingPage extends ConsumerWidget {
   const LandingPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authAsync = ref.watch(authStateProvider);
+    final isLoading = authAsync is AsyncLoading;
+
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
       backgroundColor: AppColors.primary,
       body: SafeArea(
         child: Center(
@@ -54,70 +62,88 @@ class LandingPage extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 56),
-                // Sign In button
-                SizedBox(
-                  width: double.infinity,
-                  height: 48,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.goldAccent,
-                      foregroundColor: AppColors.primary,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      elevation: 0,
-                    ),
-                    onPressed: () => context.go('/login'),
-                    child: Text(
-                      'Sign In',
-                      style: AppTextStyles.bodyLg.copyWith(
-                        color: AppColors.primary,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
+
+                // While auth session is restoring, show a spinner.
+                // Once resolved, show normal auth buttons.
+                if (isLoading) ...[
+                  const CircularProgressIndicator(
+                    color: AppColors.goldAccent,
+                    strokeWidth: 2,
                   ),
-                ),
-                const SizedBox(height: 12),
-                // Register button
-                SizedBox(
-                  width: double.infinity,
-                  height: 48,
-                  child: OutlinedButton(
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      side: BorderSide(
-                        color: Colors.white.withValues(alpha: 0.4),
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                    ),
-                    onPressed: () => context.go('/register'),
-                    child: Text(
-                      'Create Account',
-                      style: AppTextStyles.bodyLg.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 24),
-                // Browse without account
-                GestureDetector(
-                  onTap: () => context.go('/marketplace'),
-                  child: Text(
-                    'Browse marketplace →',
+                  const SizedBox(height: 16),
+                  Text(
+                    'Restoring session…',
                     style: AppTextStyles.bodyMd.copyWith(
                       color: Colors.white.withValues(alpha: 0.55),
                     ),
                   ),
-                ),
+                ] else ...[
+                  // Sign In button
+                  SizedBox(
+                    width: double.infinity,
+                    height: 48,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.goldAccent,
+                        foregroundColor: AppColors.primary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        elevation: 0,
+                      ),
+                      onPressed: () => context.go('/login'),
+                      child: Text(
+                        'Sign In',
+                        style: AppTextStyles.bodyLg.copyWith(
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  // Register button
+                  SizedBox(
+                    width: double.infinity,
+                    height: 48,
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        side: BorderSide(
+                          color: Colors.white.withValues(alpha: 0.4),
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ),
+                      onPressed: () => context.go('/register'),
+                      child: Text(
+                        'Create Account',
+                        style: AppTextStyles.bodyLg.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  // Browse without account
+                  GestureDetector(
+                    onTap: () => context.go('/marketplace'),
+                    child: Text(
+                      'Browse marketplace →',
+                      style: AppTextStyles.bodyMd.copyWith(
+                        color: Colors.white.withValues(alpha: 0.55),
+                      ),
+                    ),
+                  ),
+                ],
               ],
             ),
           ),
         ),
       ),
+    ),
     );
   }
 }

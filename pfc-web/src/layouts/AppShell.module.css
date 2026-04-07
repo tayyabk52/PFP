@@ -1,0 +1,61 @@
+/* AppShell Layout */
+
+.shell {
+  display: flex;
+  flex-direction: row;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+.sidebar {
+  flex-shrink: 0;
+}
+
+/* Wraps TopBar + scrollable content for desktop/tablet */
+.contentWrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.content {
+  flex: 1;
+  overflow-y: auto;
+  background: var(--color-surface);
+  min-height: 0;
+}
+
+.shellMobile {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+}
+
+.contentMobile {
+  flex: 1;
+  overflow-y: auto;
+  background: var(--color-surface);
+}
+
+.loadingScreen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100dvh;
+  background: var(--color-surface);
+}
+
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--color-surface-container-highest);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

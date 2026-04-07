@@ -155,51 +155,87 @@ class _IsoDetailPageState extends ConsumerState<IsoDetailPage> {
 
           return Scaffold(
             backgroundColor: AppColors.surface,
-            appBar: AppBar(
-              backgroundColor: AppColors.surface.withValues(alpha: 0.9),
-              elevation: 0,
-              surfaceTintColor: Colors.transparent,
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back),
-                color: AppColors.primary,
-                onPressed: () =>
-                    context.canPop() ? context.pop() : context.go('/iso'),
-              ),
-              title: Text(
-                'ISO REQUEST',
-                style: GoogleFonts.inter(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 2.5,
-                  color: AppColors.textSecondary,
+            appBar: PreferredSize(
+              preferredSize: const Size.fromHeight(kToolbarHeight),
+              child: ClipRect(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.surface.withValues(alpha: 0.85),
+                  ),
+                  child: AppBar(
+                    backgroundColor: Colors.transparent,
+                    elevation: 0,
+                    surfaceTintColor: Colors.transparent,
+                    leading: IconButton(
+                      icon: const Icon(Icons.arrow_back),
+                      color: AppColors.primary,
+                      onPressed: () =>
+                          context.canPop() ? context.pop() : context.go('/iso'),
+                    ),
+                    title: Text(
+                      'ISO REQUEST',
+                      style: GoogleFonts.inter(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 2.5,
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                    actions: [
+                      if (isOwner)
+                        IconButton(
+                          icon: const Icon(Icons.edit_outlined),
+                          color: AppColors.primary,
+                          onPressed: () =>
+                              context.push('/dashboard/iso/${iso.id}/edit'),
+                        ),
+                    ],
+                  ),
                 ),
               ),
-              actions: [
-                if (isOwner)
-                  IconButton(
-                    icon: const Icon(Icons.edit_outlined),
-                    color: AppColors.primary,
-                    onPressed: () =>
-                        context.push('/dashboard/iso/${iso.id}/edit'),
-                  ),
-              ],
             ),
-            body: SingleChildScrollView(
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 900),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(24, 32, 24, 80),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildIsoHeader(iso),
-                        _buildOffersPanel(iso),
-                      ],
+            body: LayoutBuilder(
+              builder: (context, constraints) {
+                final isDesktop = constraints.maxWidth > 1024;
+
+                return SingleChildScrollView(
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 1200),
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(
+                          isDesktop ? 48 : 24,
+                          32,
+                          isDesktop ? 48 : 24,
+                          80,
+                        ),
+                        child: isDesktop
+                            ? Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    flex: 3,
+                                    child: _buildIsoHeader(iso),
+                                  ),
+                                  const SizedBox(width: 48),
+                                  Expanded(
+                                    flex: 2,
+                                    child: _buildOffersPanel(iso),
+                                  ),
+                                ],
+                              )
+                            : Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  _buildIsoHeader(iso),
+                                  _buildOffersPanel(iso),
+                                ],
+                              ),
+                      ),
                     ),
                   ),
-                ),
-              ),
+                );
+              },
             ),
           );
         },
@@ -562,17 +598,29 @@ class _IsoDetailPageState extends ConsumerState<IsoDetailPage> {
               _OfferCard(offer: myOffer, showActions: false),
               if (myOffer.status == IsoOfferStatus.pending) ...[
                 const SizedBox(height: 12),
-                TextButton(
-                  onPressed: () async {
-                    await ref.read(isoWriteRepositoryProvider).withdrawOffer(myOffer.id);
-                    if (!mounted) return;
-                    ref.invalidate(myIsoOfferProvider(widget.isoId));
-                    ref.invalidate(isoOffersProvider(widget.isoId));
-                  },
-                  style: TextButton.styleFrom(foregroundColor: AppColors.error),
-                  child: Text(
-                    'Withdraw Offer',
-                    style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600),
+                SizedBox(
+                  height: 44,
+                  child: OutlinedButton(
+                    onPressed: () async {
+                      await ref.read(isoWriteRepositoryProvider).withdrawOffer(myOffer.id);
+                      if (!mounted) return;
+                      ref.invalidate(myIsoOfferProvider(widget.isoId));
+                      ref.invalidate(isoOffersProvider(widget.isoId));
+                    },
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: AppColors.error,
+                      side: BorderSide(
+                        color: AppColors.error.withValues(alpha: 0.4),
+                      ),
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.zero,
+                      ),
+                      minimumSize: const Size(140, 44),
+                    ),
+                    child: Text(
+                      'Withdraw Offer',
+                      style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600),
+                    ),
                   ),
                 ),
               ],
@@ -694,11 +742,23 @@ class _OfferBottomSheetState extends State<_OfferBottomSheet> {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.fromLTRB(
-          24, 24, 24, MediaQuery.of(context).viewInsets.bottom + 24),
+          24, 12, 24, MediaQuery.of(context).viewInsets.bottom + 24),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Drag handle
+          Center(
+            child: Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: AppColors.textMuted.withValues(alpha: 0.4),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
           Text(
             'SUBMIT AN OFFER',
             style: GoogleFonts.inter(
@@ -888,23 +948,35 @@ class _OfferCard extends StatelessWidget {
             if (offer.status == IsoOfferStatus.pending)
               Row(
                 children: [
-                  TextButton(
-                    onPressed: () => onAccept?.call(offer.id),
-                    style: TextButton.styleFrom(foregroundColor: AppColors.success),
-                    child: Text(
-                      'Accept',
-                      style: GoogleFonts.inter(
-                          fontSize: 13, fontWeight: FontWeight.w600),
+                  SizedBox(
+                    height: 44,
+                    child: TextButton(
+                      onPressed: () => onAccept?.call(offer.id),
+                      style: TextButton.styleFrom(
+                        foregroundColor: AppColors.success,
+                        minimumSize: const Size(80, 44),
+                      ),
+                      child: Text(
+                        'Accept',
+                        style: GoogleFonts.inter(
+                            fontSize: 13, fontWeight: FontWeight.w600),
+                      ),
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  TextButton(
-                    onPressed: () => onDecline?.call(offer.id),
-                    style: TextButton.styleFrom(foregroundColor: AppColors.textMuted),
-                    child: Text(
-                      'Decline',
-                      style: GoogleFonts.inter(
-                          fontSize: 13, fontWeight: FontWeight.w600),
+                  const SizedBox(width: 16),
+                  SizedBox(
+                    height: 44,
+                    child: TextButton(
+                      onPressed: () => onDecline?.call(offer.id),
+                      style: TextButton.styleFrom(
+                        foregroundColor: AppColors.textMuted,
+                        minimumSize: const Size(80, 44),
+                      ),
+                      child: Text(
+                        'Decline',
+                        style: GoogleFonts.inter(
+                            fontSize: 13, fontWeight: FontWeight.w600),
+                      ),
                     ),
                   ),
                 ],

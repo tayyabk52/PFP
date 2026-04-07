@@ -24,6 +24,9 @@ import '../../features/iso/pages/iso_create_page.dart';
 import '../../features/iso/pages/iso_detail_page.dart';
 import '../../features/iso/pages/my_iso_posts_page.dart';
 import '../../features/profile/pages/user_profile_page.dart';
+import '../../features/sellers/pages/sellers_list_page.dart';
+import '../../features/messaging/pages/inbox_page.dart';
+import '../../features/messaging/pages/conversation_page.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   final routerNotifier = _RouterNotifier(ref);
@@ -68,7 +71,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/register/seller-apply', builder: (_, __) => const SellerApplyPage()),
       GoRoute(path: '/marketplace', builder: (_, __) => const MarketplacePage()),
       GoRoute(path: '/marketplace/:id', builder: (_, state) => ListingDetailPage(listingId: state.pathParameters['id']!)),
-      GoRoute(path: '/sellers', builder: (_, __) => const StubPage(title: 'Legit Sellers')),
+      GoRoute(path: '/sellers', builder: (_, __) => const SellersListPage()),
       GoRoute(path: '/sellers/:code', builder: (_, state) => SellerProfilePage(code: state.pathParameters['code']!)),
       GoRoute(path: '/knowledge', builder: (_, __) => const StubPage(title: 'Knowledge Base')),
       GoRoute(path: '/knowledge/guides', builder: (_, __) => const StubPage(title: 'Community Guides')),
@@ -98,8 +101,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
               existingListingId: state.pathParameters['id'],
             ),
           ),
-          GoRoute(path: '/dashboard/messages', builder: (_, __) => const StubPage(title: 'Inbox')),
-          GoRoute(path: '/dashboard/messages/:id', builder: (_, __) => const StubPage(title: 'Conversation')),
+          GoRoute(path: '/dashboard/messages', builder: (_, __) => const InboxPage()),
+          GoRoute(path: '/dashboard/messages/:id', builder: (_, state) => ConversationPage(conversationId: state.pathParameters['id']!)),
           GoRoute(path: '/dashboard/profile', builder: (_, __) => const ProfilePage()),
           GoRoute(path: '/dashboard/reviews', builder: (_, __) => const StubPage(title: 'My Reviews')),
           GoRoute(path: '/dashboard/reports', builder: (_, __) => const StubPage(title: 'Reports')),

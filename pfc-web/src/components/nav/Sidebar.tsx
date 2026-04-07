@@ -119,6 +119,17 @@ function PlusIcon() {
   )
 }
 
+function PackageIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M16.5 9.4l-9-5.19" />
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+      <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+      <line x1="12" y1="22.08" x2="12" y2="12" />
+    </svg>
+  )
+}
+
 // ─── Nav Items ────────────────────────────────────────────────────────────────
 
 interface NavItem {
@@ -126,17 +137,6 @@ interface NavItem {
   icon: () => ReactElement
   route: string
 }
-
-const memberItems: NavItem[] = [
-  { label: 'Market',       icon: StorefrontIcon, route: '/marketplace' },
-  { label: 'Dashboard',    icon: GridIcon,       route: '/dashboard' },
-  { label: 'Messages',     icon: MailIcon,       route: '/dashboard/messages' },
-  { label: 'ISO Board',    icon: SearchIcon,     route: '/iso' },
-  { label: 'My ISO Posts', icon: InboxIcon,      route: '/dashboard/iso' },
-  { label: 'Reports',      icon: FlagIcon,       route: '/dashboard/reports' },
-  { label: 'Knowledge',    icon: BookIcon,       route: '/knowledge' },
-  { label: 'Sellers',      icon: VerifiedIcon,   route: '/sellers' },
-]
 
 // ─── Sidebar Component ────────────────────────────────────────────────────────
 
@@ -167,6 +167,18 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
   const isSeller = profile?.role === 'seller' || profile?.role === 'admin'
   const ctaLabel = isSeller ? 'Create Listing' : 'Create ISO'
   const ctaRoute = isSeller ? '/marketplace/new' : '/iso/new'
+
+  const navItems: NavItem[] = [
+    { label: 'Market',       icon: StorefrontIcon, route: '/marketplace' },
+    { label: 'Dashboard',    icon: GridIcon,       route: '/dashboard' },
+    ...(isSeller ? [{ label: 'My Listings', icon: PackageIcon, route: '/dashboard/listings' }] : []),
+    { label: 'Messages',     icon: MailIcon,       route: '/dashboard/messages' },
+    { label: 'ISO Board',    icon: SearchIcon,     route: '/iso' },
+    { label: 'My ISO Posts', icon: InboxIcon,      route: '/dashboard/iso' },
+    { label: 'Reports',      icon: FlagIcon,       route: '/dashboard/reports' },
+    { label: 'Knowledge',    icon: BookIcon,       route: '/knowledge' },
+    { label: 'Sellers',      icon: VerifiedIcon,   route: '/sellers' },
+  ]
 
   return (
     <div className={`${styles.sidebar} ${collapsed ? styles.sidebarCollapsed : styles.sidebarExpanded}`}>
@@ -221,7 +233,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
 
       {/* ── Nav items ───────────────────────────────────────── */}
       <nav className={`${styles.nav} ${collapsed ? styles.navCollapsed : ''}`}>
-        {memberItems.map((item) => {
+        {navItems.map((item) => {
           const active = isActive(item.route)
           const Icon = item.icon
           return (

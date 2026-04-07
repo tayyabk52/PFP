@@ -23,5 +23,13 @@ void main() {
     test('hasSellerApplicationProvider is defined', () {
       expect(hasSellerApplicationProvider, isNotNull);
     });
+
+    test('sellerApplicationProvider is defined', () {
+      expect(sellerApplicationProvider, isNotNull);
+    });
+
+    test('sellerApplicationStatusProvider is defined', () {
+      expect(sellerApplicationStatusProvider, isNotNull);
+    });
   });
 }

@@ -1,0 +1,950 @@
+.page {
+  padding: 1.25rem 1.25rem calc(64px + 1.5rem);
+}
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ── Edit form ── */
+
+.editForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: var(--color-surface-container-lowest);
+  box-shadow: 0 0 0 1px var(--color-surface-container-highest);
+  border-radius: var(--radius-sm);
+}
+
+.editHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.editTitle {
+  font-family: var(--font-sans);
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.cancelBtn {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.editField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.editRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.editLabel {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--color-text-secondary);
+}
+
+.editInput {
+  height: 40px;
+  padding: 0 0.75rem;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  color: var(--color-on-background);
+  background: var(--color-surface-container-low);
+  border: 1px solid var(--color-surface-container-highest);
+  border-radius: var(--radius-sm);
+  outline: none;
+  box-sizing: border-box;
+  width: 100%;
+  transition: border-color 0.15s ease;
+}
+
+.editInput:focus { border-color: var(--color-primary); }
+
+.editTextarea {
+  padding: 0.625rem 0.75rem;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  color: var(--color-on-background);
+  background: var(--color-surface-container-low);
+  border: 1px solid var(--color-surface-container-highest);
+  border-radius: var(--radius-sm);
+  outline: none;
+  box-sizing: border-box;
+  width: 100%;
+  resize: vertical;
+  transition: border-color 0.15s ease;
+  line-height: 1.5;
+}
+
+.editTextarea:focus { border-color: var(--color-primary); }
+
+.editActions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.saveBtn {
+  flex: 1;
+  height: 40px;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--color-primary);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.saveBtn:hover:not(:disabled) { opacity: 0.88; }
+.saveBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.deleteBtn {
+  height: 40px;
+  padding: 0 1rem;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #ba1a1a;
+  background: rgba(186, 26, 26, 0.08);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 0.15s ease;
+  white-space: nowrap;
+}
+
+.deleteBtn:hover:not(:disabled) { background: rgba(186, 26, 26, 0.14); }
+
+.msgSuccess {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  color: var(--color-primary);
+}
+
+.msgError {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  color: #ba1a1a;
+}
+
+/* ── Edit toggle button ── */
+
+.editToggleBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  background: rgba(0, 53, 39, 0.07);
+  border: none;
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.editToggleBtn:hover { background: rgba(0, 53, 39, 0.12); }
+
+/* ── Status ── */
+
+.statusRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.25rem;
+}
+
+.statusBadge {
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  padding: 0.25rem 0.625rem;
+  border-radius: var(--radius-sm);
+}
+
+.statusPublished {
+  background: rgba(0, 53, 39, 0.08);
+  color: var(--color-primary);
+}
+
+.statusDraft {
+  background: rgba(138, 144, 153, 0.12);
+  color: var(--color-text-muted);
+}
+
+.statusFulfilled {
+  background: rgba(233, 193, 118, 0.2);
+  color: #7a6000;
+}
+
+.statusRemoved {
+  background: rgba(186, 26, 26, 0.08);
+  color: #ba1a1a;
+}
+
+/* ── Fragrance info ── */
+
+.fragranceName {
+  font-family: var(--font-serif);
+  font-size: 1.875rem;
+  font-weight: 600;
+  color: var(--color-on-background);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  margin-bottom: 0.25rem;
+}
+
+.brand {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  margin-bottom: 1rem;
+}
+
+/* ── Chips ── */
+
+.chips {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+
+.chipMuted {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.3rem 0.75rem;
+  background: var(--color-surface-container-low);
+  color: var(--color-text-secondary);
+  border-radius: 2rem;
+}
+
+.chipGold {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.3rem 0.75rem;
+  background: rgba(233, 193, 118, 0.18);
+  color: #7a6000;
+  border-radius: 2rem;
+}
+
+/* ── Notes ── */
+
+.notes {
+  margin-bottom: 1.25rem;
+}
+
+.notesLabel {
+  font-family: var(--font-sans);
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: 0.375rem;
+}
+
+.notesText {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+/* ── Poster row ── */
+
+.posterRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  background: var(--color-surface-container-lowest);
+  box-shadow: 0 0 0 1px var(--color-surface-container-highest);
+  border-radius: var(--radius-sm);
+}
+
+.posterAvatar {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  border-radius: 50%;
+  background: rgba(0, 53, 39, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  overflow: hidden;
+}
+
+.posterAvatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.posterInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.posterName {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-on-background);
+}
+
+.posterMeta {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+/* ── Right column (offers) ── */
+
+.offersLabel {
+  font-family: var(--font-sans);
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: 0.875rem;
+}
+
+.noOffers {
+  padding: 1.5rem;
+  background: var(--color-surface-container-lowest);
+  box-shadow: 0 0 0 1px var(--color-surface-container-highest);
+  border-radius: var(--radius-sm);
+}
+
+.noOffersText {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  line-height: 1.55;
+}
+
+/* ── Offer list ── */
+
+.offerList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.offerRow {
+  padding: 0.875rem 1rem;
+  background: var(--color-surface-container-lowest);
+  box-shadow: 0 0 0 1px var(--color-surface-container-highest);
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.offerRowDim {
+  opacity: 0.6;
+}
+
+.offerHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.offerSellerRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.offerSeller {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-on-background);
+}
+
+.offerSellerName {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  transition: opacity 0.15s;
+}
+
+.offerSellerName:hover {
+  opacity: 0.75;
+  text-decoration: underline;
+}
+
+.offerSellerCity {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  color: var(--color-text-muted);
+  line-height: 1.4;
+}
+
+.offerRight {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+  flex-shrink: 0;
+}
+
+.offerAmount {
+  font-family: var(--font-serif);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.offerStatus {
+  font-family: var(--font-sans);
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-container-low);
+  color: var(--color-text-muted);
+}
+
+.offerStatus_pending {
+  background: rgba(0, 53, 39, 0.08);
+  color: var(--color-primary);
+}
+
+.offerStatus_accepted {
+  background: rgba(233, 193, 118, 0.2);
+  color: #7a6000;
+}
+
+.offerStatus_declined {
+  background: rgba(186, 26, 26, 0.08);
+  color: #ba1a1a;
+}
+
+.offerStatus_withdrawn {
+  background: var(--color-surface-container-low);
+  color: var(--color-text-muted);
+}
+
+.offerMsg {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.offerActions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.acceptBtn {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--color-primary);
+  border: none;
+  padding: 0.375rem 0.875rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.acceptBtn:hover { opacity: 0.88; }
+
+.declineBtn {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #ba1a1a;
+  background: rgba(186, 26, 26, 0.08);
+  border: none;
+  padding: 0.375rem 0.875rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.declineBtn:hover { background: rgba(186, 26, 26, 0.14); }
+
+/* ── Submit offer / member info ── */
+
+.submitOfferBtn {
+  width: 100%;
+  height: 48px;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--color-primary);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.submitOfferBtn:hover { opacity: 0.88; }
+
+.memberInfo {
+  border-left: 3px solid var(--color-primary);
+  padding: 0.75rem 1rem;
+  background: rgba(0, 53, 39, 0.04);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.memberInfoText {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  line-height: 1.55;
+}
+
+/* ── Offers count badge ── */
+
+.offersCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 0.5rem;
+  background: var(--color-primary);
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+}
+
+/* ── Grouped offer card (owner view) ── */
+
+.offerGroup {
+  padding: 0.875rem 1rem;
+  background: var(--color-surface-container-lowest);
+  box-shadow: 0 0 0 1px var(--color-surface-container-highest);
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.offerGroupDim {
+  opacity: 0.55;
+}
+
+.offerGroupHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.offerAvatarSmall {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--color-surface-container-high);
+  color: var(--color-primary);
+  font-family: var(--font-sans);
+  font-size: 0.6rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.offerAvatarSmall img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.offerSellerRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.offerSellerInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.offerTime {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  color: var(--color-text-muted);
+}
+
+/* Previous offers history toggle */
+
+.offerHistoryToggle {
+  border-top: 1px solid var(--color-surface-container-highest);
+  padding-top: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.offerHistoryBtn {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  letter-spacing: 0.02em;
+  transition: color 0.15s;
+}
+
+.offerHistoryBtn:hover {
+  color: var(--color-primary);
+}
+
+.offerHistory {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.offerHistoryItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--color-surface-container-low);
+  border-radius: var(--radius-sm);
+}
+
+.offerHistoryMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.offerHistoryMsg {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  line-height: 1.45;
+  margin: 0;
+}
+
+/* ── Seller view: own offer history ── */
+
+.myOfferHistory {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.myOfferRow {
+  padding: 0.75rem 1rem;
+  background: var(--color-surface-container-lowest);
+  box-shadow: 0 0 0 1px var(--color-surface-container-highest);
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.myOfferRowPast {
+  opacity: 0.55;
+}
+
+.myOfferMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.offerNote {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  padding: 0.625rem 0.875rem;
+  background: rgba(0, 53, 39, 0.04);
+  border-left: 3px solid var(--color-primary);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  margin-top: 0.25rem;
+}
+
+.withdrawBtn {
+  font-family: var(--font-sans);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  background: none;
+  border: 1px solid var(--color-surface-container-highest);
+  padding: 0.25rem 0.625rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  align-self: flex-start;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.withdrawBtn:hover {
+  border-color: #ba1a1a;
+  color: #ba1a1a;
+}
+
+.offerFormNote {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin-bottom: 0.25rem;
+}
+
+.fieldRequired {
+  color: #ba1a1a;
+}
+
+/* ── Snackbar ── */
+
+.snack {
+  position: fixed;
+  bottom: 5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-primary);
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 4px 16px rgba(0, 53, 39, 0.2);
+  white-space: nowrap;
+  z-index: 100;
+}
+
+/* ── Spinner / Error ── */
+
+.spinnerWrap {
+  display: flex;
+  justify-content: center;
+  padding: 4rem;
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 2.5px solid var(--color-surface-container-highest);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.errorWrap {
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.errorMsg {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  color: #ba1a1a;
+}
+
+.backBtn {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  color: var(--color-primary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+}
+
+/* ─── Desktop ──────────────────────────────────────────────────────────────── */
+
+@media (min-width: 1024px) {
+  .page {
+    padding: 2rem 2.5rem 4rem;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 2.5rem;
+    align-items: start;
+  }
+
+  .fragranceName {
+    font-size: 2.25rem;
+  }
+
+  .rightCol {
+    position: sticky;
+    top: 1.5rem;
+  }
+}
+
+/* ── Offer form ── */
+.offerForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background: var(--color-surface-container-lowest);
+  padding: 1.5rem;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 0 0 1px var(--color-surface-container-highest);
+  margin-top: 1rem;
+}
+
+.offerFormTitle {
+  font-family: var(--font-serif);
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--color-on-background);
+}
+
+.offerField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.offerField label {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--color-text-muted);
+}
+
+.offerField input,
+.offerField textarea {
+  width: 100%;
+  padding: 0.75rem;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  background: var(--color-surface-container-low);
+  border: 1px solid var(--color-surface-container-highest);
+  border-radius: var(--radius-sm);
+  color: var(--color-on-background);
+  outline: none;
+  box-sizing: border-box;
+}
+
+.offerField input:focus,
+.offerField textarea:focus {
+  border-color: var(--color-primary);
+}
+
+.offerFormActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.offerFormCancel {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.offerFormSubmit {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--color-primary);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 0.625rem 1.25rem;
+  cursor: pointer;
+}
+
+.offerFormSubmit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

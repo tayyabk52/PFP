@@ -34,10 +34,12 @@ class _IsoCard extends StatelessWidget {
 
     return InkWell(
       onTap: () => context.push('/iso/${iso.id}'),
+      mouseCursor: SystemMouseCursors.click,
+      hoverColor: AppColors.surfaceContainerLow.withValues(alpha: 0.5),
       child: Container(
-        color: AppColors.surfaceContainerLow,
+        color: AppColors.card,
         padding: const EdgeInsets.all(16),
-        margin: const EdgeInsets.only(bottom: 2),
+        margin: const EdgeInsets.fromLTRB(0, 0, 0, 8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -48,9 +50,9 @@ class _IsoCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     iso.fragranceName,
-                    style: GoogleFonts.inter(
+                    style: GoogleFonts.notoSerif(
                       fontSize: 15,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w700,
                       color: AppColors.onBackground,
                     ),
                   ),
@@ -80,13 +82,13 @@ class _IsoCard extends StatelessWidget {
                     child: Row(
                       children: [
                         CircleAvatar(
-                          radius: 10,
+                          radius: 12,
                           backgroundColor:
                               AppColors.primary.withValues(alpha: 0.12),
                           child: Text(
                             _initials(iso.poster!.displayNameOrFallback),
                             style: GoogleFonts.inter(
-                              fontSize: 8,
+                              fontSize: 9,
                               fontWeight: FontWeight.w700,
                               color: AppColors.primary,
                             ),
@@ -135,15 +137,18 @@ class _IsoCard extends StatelessWidget {
               const SizedBox(height: 8),
               Container(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                color: AppColors.primary.withValues(alpha: 0.08),
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: AppColors.goldBadgeBg,
+                  borderRadius: BorderRadius.circular(9999),
+                ),
                 child: Text(
                   'VERIFIED SELLER',
                   style: GoogleFonts.inter(
-                    fontSize: 9,
+                    fontSize: 10,
                     fontWeight: FontWeight.w700,
                     letterSpacing: 1.2,
-                    color: AppColors.primary,
+                    color: AppColors.goldAccent,
                   ),
                 ),
               ),
@@ -157,8 +162,11 @@ class _IsoCard extends StatelessWidget {
   Widget _buildBudgetChip() {
     if (iso.budgetPkr > 0) {
       return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-        color: AppColors.primary,
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        decoration: BoxDecoration(
+          color: AppColors.primary,
+          borderRadius: BorderRadius.circular(9999),
+        ),
         child: Text(
           'PKR ${iso.budgetPkr}',
           style: GoogleFonts.inter(
@@ -237,13 +245,14 @@ class _IsoBoardPageState extends ConsumerState<IsoBoardPage> {
               const SizedBox(height: 20),
               SizedBox(
                 height: 48,
-                child: OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: AppColors.primary),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    foregroundColor: AppColors.onPrimary,
+                    elevation: 0,
                     shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.zero,
                     ),
-                    foregroundColor: AppColors.primary,
                     padding: const EdgeInsets.symmetric(horizontal: 24),
                   ),
                   onPressed: () => context.push('/iso/create'),
@@ -280,7 +289,7 @@ class _IsoBoardPageState extends ConsumerState<IsoBoardPage> {
         }
       },
       child: Scaffold(
-      backgroundColor: AppColors.surface,
+      backgroundColor: AppColors.surfaceContainerLow,
       floatingActionButton: user != null
           ? FloatingActionButton.extended(
               backgroundColor: AppColors.primary,
@@ -300,7 +309,7 @@ class _IsoBoardPageState extends ConsumerState<IsoBoardPage> {
         slivers: [
           // ── SliverAppBar with search ────────────────────────────────────
           SliverAppBar(
-            backgroundColor: AppColors.surface,
+            backgroundColor: AppColors.surfaceContainerLow.withValues(alpha: 0.92),
             elevation: 0,
             pinned: true,
             floating: false,
@@ -336,14 +345,15 @@ class _IsoBoardPageState extends ConsumerState<IsoBoardPage> {
                       color: AppColors.textMuted,
                     ),
                     filled: true,
-                    fillColor: AppColors.surfaceContainerLow,
+                    fillColor: AppColors.surfaceContainerHighest,
                     border: InputBorder.none,
                     enabledBorder: InputBorder.none,
-                    focusedBorder: const UnderlineInputBorder(
+                    focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: AppColors.primary,
-                        width: 1.5,
+                        color: AppColors.primary.withValues(alpha: 0.15),
+                        width: 1,
                       ),
+                      borderRadius: BorderRadius.zero,
                     ),
                     contentPadding: const EdgeInsets.symmetric(
                       horizontal: 16,
@@ -401,42 +411,74 @@ class _IsoBoardPageState extends ConsumerState<IsoBoardPage> {
           ),
 
           // ── ISO list / states ───────────────────────────────────────────
-          isosAsync.when(
-            loading: () => const SliverToBoxAdapter(
-              child: Center(
-                child: Padding(
-                  padding: EdgeInsets.all(48),
-                  child: CircularProgressIndicator(
-                    color: AppColors.primary,
-                  ),
-                ),
-              ),
-            ),
-            error: (err, _) => SliverToBoxAdapter(
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(48),
-                  child: Text(
-                    'Failed to load',
-                    style: GoogleFonts.inter(
-                      fontSize: 14,
-                      color: AppColors.textSecondary,
+          SliverLayoutBuilder(
+            builder: (context, constraints) {
+              final isDesktop = constraints.crossAxisExtent > 1024;
+              final isTablet = constraints.crossAxisExtent > 600;
+
+              return isosAsync.when(
+                loading: () => const SliverToBoxAdapter(
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(48),
+                      child: CircularProgressIndicator(
+                        color: AppColors.primary,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ),
-            data: (isos) {
-              if (isos.isEmpty) {
-                return SliverToBoxAdapter(
-                  child: _buildEmptyState(user != null),
-                );
-              }
-              return SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (ctx, i) => _IsoCard(iso: isos[i]),
-                  childCount: isos.length,
+                error: (err, _) => SliverToBoxAdapter(
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(48),
+                      child: Text(
+                        'Failed to load',
+                        style: GoogleFonts.inter(
+                          fontSize: 14,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
+                data: (isos) {
+                  if (isos.isEmpty) {
+                    return SliverToBoxAdapter(
+                      child: _buildEmptyState(user != null),
+                    );
+                  }
+
+                  final crossAxisCount = isDesktop ? 2 : (isTablet ? 2 : 1);
+                  final hPadding = isDesktop ? 32.0 : 16.0;
+
+                  if (crossAxisCount > 1) {
+                    return SliverPadding(
+                      padding: EdgeInsets.symmetric(horizontal: hPadding),
+                      sliver: SliverGrid(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: crossAxisCount,
+                          crossAxisSpacing: 8,
+                          mainAxisSpacing: 8,
+                          childAspectRatio: 2.8,
+                        ),
+                        delegate: SliverChildBuilderDelegate(
+                          (ctx, i) => _IsoCard(iso: isos[i]),
+                          childCount: isos.length,
+                        ),
+                      ),
+                    );
+                  }
+
+                  return SliverPadding(
+                    padding: EdgeInsets.symmetric(horizontal: hPadding),
+                    sliver: SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (ctx, i) => _IsoCard(iso: isos[i]),
+                        childCount: isos.length,
+                      ),
+                    ),
+                  );
+                },
               );
             },
           ),

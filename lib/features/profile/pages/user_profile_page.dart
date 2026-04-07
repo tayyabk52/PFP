@@ -135,47 +135,64 @@ class _UserProfilePageState extends ConsumerState<UserProfilePage> {
         final isOwnProfile = currentUser?.id == widget.userId;
         final showMessageButton = !isOwnProfile;
 
-        return Scaffold(
-          backgroundColor: AppColors.surface,
-          body: CustomScrollView(
-            slivers: [
-              SliverAppBar(
-                backgroundColor: AppColors.surface,
-                surfaceTintColor: Colors.transparent,
-                leading: IconButton(
-                  icon: const Icon(Icons.arrow_back,
-                      color: AppColors.onBackground),
-                  onPressed: () => context.canPop()
-                      ? context.pop()
-                      : context.go('/iso'),
+        return PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, _) {
+            if (!didPop) {
+              if (context.canPop()) {
+                context.pop();
+              } else {
+                context.go('/marketplace');
+              }
+            }
+          },
+          child: Scaffold(
+            backgroundColor: AppColors.surfaceContainerLow,
+            body: CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  backgroundColor: AppColors.surfaceContainerLow.withValues(alpha: 0.92),
+                  surfaceTintColor: Colors.transparent,
+                  leading: IconButton(
+                    icon: const Icon(Icons.arrow_back,
+                        color: AppColors.onBackground),
+                    onPressed: () => context.canPop()
+                        ? context.pop()
+                        : context.go('/marketplace'),
+                  ),
+                  pinned: true,
                 ),
-                pinned: true,
-              ),
-              SliverToBoxAdapter(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildHeroHeader(profile, showMessageButton),
-                    if (profile.isVerifiedSeller ||
-                        profile.transactionCount > 0) ...[
-                      const SizedBox(height: 16),
-                      _buildTrustChips(profile),
-                    ],
-                    if (profile.isVerifiedSeller) ...[
-                      const SizedBox(height: 16),
-                      _buildStatsBar(profile),
-                      const SizedBox(height: 16),
-                      _buildReviewsSection(profile),
-                      const SizedBox(height: 16),
-                      _buildActiveListings(context, profile),
-                    ],
-                    const SizedBox(height: 24),
-                    _buildActiveIsos(context, profile),
-                    const SizedBox(height: 40),
-                  ],
+                SliverToBoxAdapter(
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 1200),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildHeroHeader(profile, showMessageButton),
+                          if (profile.isVerifiedSeller ||
+                              profile.transactionCount > 0) ...[
+                            const SizedBox(height: 16),
+                            _buildTrustChips(profile),
+                          ],
+                          if (profile.isVerifiedSeller) ...[
+                            const SizedBox(height: 16),
+                            _buildStatsBar(profile),
+                            const SizedBox(height: 16),
+                            _buildReviewsSection(profile),
+                            const SizedBox(height: 16),
+                            _buildActiveListings(context, profile),
+                          ],
+                          const SizedBox(height: 24),
+                          _buildActiveIsos(context, profile),
+                          const SizedBox(height: 40),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },
@@ -183,129 +200,205 @@ class _UserProfilePageState extends ConsumerState<UserProfilePage> {
   }
 
   Widget _buildHeroHeader(SellerProfile profile, bool showMessageButton) {
-    return Container(
-      color: AppColors.card,
-      padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
-      child: Column(
-        children: [
-          CircleAvatar(
-            radius: 40,
-            backgroundColor: AppColors.surfaceContainerLow,
-            backgroundImage: profile.avatarUrl != null
-                ? CachedNetworkImageProvider(profile.avatarUrl!)
-                : null,
-            child: profile.avatarUrl == null
-                ? Text(
-                    _initials(profile.displayNameOrFallback),
-                    style: GoogleFonts.notoSerif(
-                      fontSize: 26,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.primary,
-                    ),
-                  )
-                : null,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            profile.displayNameOrFallback,
-            style: GoogleFonts.notoSerif(
-              fontSize: 24,
-              fontWeight: FontWeight.w700,
-              color: AppColors.onBackground,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isDesktop = constraints.maxWidth > 760;
+
+        final avatar = CircleAvatar(
+          radius: isDesktop ? 48 : 40,
+          backgroundColor: AppColors.surfaceContainerLow,
+          backgroundImage: profile.avatarUrl != null
+              ? CachedNetworkImageProvider(profile.avatarUrl!)
+              : null,
+          child: profile.avatarUrl == null
+              ? Text(
+                  _initials(profile.displayNameOrFallback),
+                  style: GoogleFonts.notoSerif(
+                    fontSize: isDesktop ? 30 : 26,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.primary,
+                  ),
+                )
+              : null,
+        );
+
+        final identityBlock = Column(
+          crossAxisAlignment: isDesktop
+              ? CrossAxisAlignment.start
+              : CrossAxisAlignment.center,
+          children: [
+            Text(
+              profile.displayNameOrFallback,
+              style: GoogleFonts.notoSerif(
+                fontSize: isDesktop ? 28 : 24,
+                fontWeight: FontWeight.w700,
+                color: AppColors.onBackground,
+              ),
+              textAlign: isDesktop ? TextAlign.start : TextAlign.center,
             ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (profile.pfcSellerCode != null) ...[
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  color: AppColors.surfaceContainerLow,
-                  child: Text(
-                    profile.pfcSellerCode!,
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: isDesktop
+                  ? MainAxisAlignment.start
+                  : MainAxisAlignment.center,
+              children: [
+                if (profile.pfcSellerCode != null) ...[
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 4),
+                    color: AppColors.surfaceContainerHighest,
+                    child: Text(
+                      profile.pfcSellerCode!,
+                      style: GoogleFonts.inter(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 1.2,
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                ],
+                if (profile.verifiedAt != null)
+                  const Icon(Icons.verified,
+                      size: 20, color: AppColors.goldAccent),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Wrap(
+              alignment: isDesktop ? WrapAlignment.start : WrapAlignment.center,
+              spacing: 14,
+              children: [
+                if (profile.city != null)
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.location_on_outlined,
+                          size: 14, color: AppColors.textMuted),
+                      const SizedBox(width: 3),
+                      Text(
+                        profile.city!,
+                        style: GoogleFonts.inter(
+                          fontSize: 12,
+                          color: AppColors.textMuted,
+                        ),
+                      ),
+                    ],
+                  ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.calendar_today_outlined,
+                        size: 13, color: AppColors.textMuted),
+                    const SizedBox(width: 3),
+                    Text(
+                      'Member since ${DateFormat('MMM yyyy').format(profile.createdAt)}',
+                      style: GoogleFonts.inter(
+                        fontSize: 12,
+                        color: AppColors.textMuted,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            if (showMessageButton && isDesktop) ...[
+              const SizedBox(height: 20),
+              SizedBox(
+                height: 48,
+                child: FilledButton.icon(
+                  style: FilledButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    foregroundColor: AppColors.onPrimary,
+                    shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.zero),
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                  ),
+                  onPressed: _isMessaging ? null : _onMessageTap,
+                  icon: _isMessaging
+                      ? const SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: AppColors.onPrimary,
+                          ),
+                        )
+                      : const Icon(Icons.mail_outline_rounded, size: 18),
+                  label: Text(
+                    'MESSAGE',
                     style: GoogleFonts.inter(
                       fontSize: 11,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 1.2,
-                      color: AppColors.textSecondary,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 2.0,
                     ),
                   ),
                 ),
-                const SizedBox(width: 8),
-              ],
-              if (profile.verifiedAt != null)
-                const Icon(Icons.verified,
-                    size: 20, color: AppColors.goldAccent),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (profile.city != null) ...[
-                const Icon(Icons.location_on_outlined,
-                    size: 14, color: AppColors.textMuted),
-                const SizedBox(width: 3),
-                Text(
-                  profile.city!,
-                  style: GoogleFonts.inter(
-                    fontSize: 12,
-                    color: AppColors.textMuted,
-                  ),
-                ),
-                const SizedBox(width: 14),
-              ],
-              const Icon(Icons.calendar_today_outlined,
-                  size: 13, color: AppColors.textMuted),
-              const SizedBox(width: 3),
-              Text(
-                'Member since ${DateFormat('MMM yyyy').format(profile.createdAt)}',
-                style: GoogleFonts.inter(
-                  fontSize: 12,
-                  color: AppColors.textMuted,
-                ),
               ),
             ],
-          ),
-          if (showMessageButton) ...[
-            const SizedBox(height: 20),
-            SizedBox(
-              width: double.infinity,
-              height: 48,
-              child: FilledButton.icon(
-                style: FilledButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: AppColors.onPrimary,
-                  shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.zero),
-                ),
-                onPressed: _isMessaging ? null : _onMessageTap,
-                icon: _isMessaging
-                    ? const SizedBox(
-                        width: 18,
-                        height: 18,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: AppColors.onPrimary,
-                        ),
-                      )
-                    : const Icon(Icons.mail_outline_rounded, size: 18),
-                label: Text(
-                  'MESSAGE',
-                  style: GoogleFonts.inter(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 2.0,
-                  ),
-                ),
-              ),
-            ),
           ],
-        ],
-      ),
+        );
+
+        return Container(
+          color: AppColors.card,
+          padding: EdgeInsets.fromLTRB(
+            isDesktop ? 40 : 24,
+            32,
+            isDesktop ? 40 : 24,
+            24,
+          ),
+          child: isDesktop
+              ? Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    avatar,
+                    const SizedBox(width: 28),
+                    Expanded(child: identityBlock),
+                  ],
+                )
+              : Column(
+                  children: [
+                    avatar,
+                    const SizedBox(height: 16),
+                    identityBlock,
+                    if (showMessageButton) ...[
+                      const SizedBox(height: 20),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 48,
+                        child: FilledButton.icon(
+                          style: FilledButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                            foregroundColor: AppColors.onPrimary,
+                            shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.zero),
+                          ),
+                          onPressed: _isMessaging ? null : _onMessageTap,
+                          icon: _isMessaging
+                              ? const SizedBox(
+                                  width: 18,
+                                  height: 18,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: AppColors.onPrimary,
+                                  ),
+                                )
+                              : const Icon(Icons.mail_outline_rounded, size: 18),
+                          label: Text(
+                            'MESSAGE',
+                            style: GoogleFonts.inter(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 2.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+        );
+      },
     );
   }
 
@@ -370,38 +463,56 @@ class _UserProfilePageState extends ConsumerState<UserProfilePage> {
         ),
       ),
       error: (_, __) => const SizedBox.shrink(),
-      data: (stats) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Wrap(
-          spacing: 10,
-          runSpacing: 10,
-          children: [
-            _statCard('Listings', stats.totalListings.toString()),
-            _statCard('Sold', stats.totalSales.toString()),
+      data: (stats) => LayoutBuilder(
+        builder: (context, constraints) {
+          final isDesktop = constraints.maxWidth > 760;
+          final items = [
+            _statCard('Listings', stats.totalListings.toString(), isDesktop),
+            _statCard('Sold', stats.totalSales.toString(), isDesktop),
             _statCard(
               'Avg Rating',
               stats.averageRating > 0
                   ? stats.averageRating.toStringAsFixed(1)
                   : '--',
+              isDesktop,
             ),
-            _statCard('Reviews', stats.reviewCount.toString()),
-          ],
-        ),
+            _statCard('Reviews', stats.reviewCount.toString(), isDesktop),
+          ];
+          return Padding(
+            padding: EdgeInsets.symmetric(
+                horizontal: isDesktop ? 40 : 20),
+            child: isDesktop
+                ? Row(
+                    children: items
+                        .map((w) => Expanded(child: w))
+                        .expand((w) => [w, const SizedBox(width: 8)])
+                        .toList()
+                      ..removeLast(),
+                  )
+                : Wrap(
+                    spacing: 10,
+                    runSpacing: 10,
+                    children: items,
+                  ),
+          );
+        },
       ),
     );
   }
 
-  Widget _statCard(String label, String value) {
+  Widget _statCard(String label, String value, [bool isDesktop = false]) {
     return Container(
-      width: 80,
-      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 10),
+      padding: EdgeInsets.symmetric(
+        vertical: isDesktop ? 20 : 14,
+        horizontal: isDesktop ? 16 : 10,
+      ),
       color: AppColors.card,
       child: Column(
         children: [
           Text(
             value,
             style: GoogleFonts.notoSerif(
-              fontSize: 18,
+              fontSize: isDesktop ? 22 : 18,
               fontWeight: FontWeight.w700,
               color: AppColors.onBackground,
             ),
@@ -410,9 +521,9 @@ class _UserProfilePageState extends ConsumerState<UserProfilePage> {
           Text(
             label.toUpperCase(),
             style: GoogleFonts.inter(
-              fontSize: 9,
+              fontSize: 10,
               fontWeight: FontWeight.w700,
-              letterSpacing: 2.5,
+              letterSpacing: 2.0,
               color: AppColors.textSecondary,
             ),
             textAlign: TextAlign.center,
@@ -441,7 +552,7 @@ class _UserProfilePageState extends ConsumerState<UserProfilePage> {
             child: Text(
               'REVIEWS',
               style: GoogleFonts.inter(
-                fontSize: 9,
+                fontSize: 10,
                 fontWeight: FontWeight.w700,
                 letterSpacing: 2.5,
                 color: AppColors.textSecondary,
@@ -572,46 +683,70 @@ class _UserProfilePageState extends ConsumerState<UserProfilePage> {
         ),
       ),
       error: (_, __) => const SizedBox.shrink(),
-      data: (listings) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Text(
-              'ACTIVE LISTINGS',
-              style: GoogleFonts.inter(
-                fontSize: 9,
-                fontWeight: FontWeight.w700,
-                letterSpacing: 2.5,
-                color: AppColors.textSecondary,
-              ),
-            ),
-          ),
-          const SizedBox(height: 12),
-          if (listings.isEmpty)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Text(
-                'No active listings',
-                style: GoogleFonts.inter(
-                  fontSize: 13,
-                  color: AppColors.textMuted,
+      data: (listings) => LayoutBuilder(
+        builder: (context, constraints) {
+          final isDesktop = constraints.maxWidth > 760;
+          final hPadding = isDesktop ? 40.0 : 24.0;
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: hPadding),
+                child: Text(
+                  'ACTIVE LISTINGS',
+                  style: GoogleFonts.inter(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 2.5,
+                    color: AppColors.textSecondary,
+                  ),
                 ),
               ),
-            )
-          else
-            SizedBox(
-              height: 200,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                itemCount: listings.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 12),
-                itemBuilder: (context, index) =>
-                    _buildListingCard(context, listings[index]),
-              ),
-            ),
-        ],
+              const SizedBox(height: 12),
+              if (listings.isEmpty)
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: hPadding),
+                  child: Text(
+                    'No active listings',
+                    style: GoogleFonts.inter(
+                      fontSize: 13,
+                      color: AppColors.textMuted,
+                    ),
+                  ),
+                )
+              else if (isDesktop)
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: hPadding),
+                  child: GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 4,
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 12,
+                      childAspectRatio: 0.75,
+                    ),
+                    itemCount: listings.length,
+                    itemBuilder: (context, index) =>
+                        _buildListingCard(context, listings[index]),
+                  ),
+                )
+              else
+                SizedBox(
+                  height: 220,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    padding: EdgeInsets.symmetric(horizontal: hPadding - 4),
+                    itemCount: listings.length,
+                    separatorBuilder: (_, __) => const SizedBox(width: 12),
+                    itemBuilder: (context, index) =>
+                        _buildListingCard(context, listings[index]),
+                  ),
+                ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -628,17 +763,16 @@ class _UserProfilePageState extends ConsumerState<UserProfilePage> {
     return GestureDetector(
       onTap: () => context.push('/marketplace/$id'),
       child: Container(
-        width: 150,
+        width: 165,
         color: AppColors.card,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ClipRRect(
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(4)),
+              borderRadius: BorderRadius.zero,
               child: SizedBox(
-                height: 110,
-                width: 150,
+                height: 120,
+                width: 165,
                 child: photoUrl != null
                     ? CachedNetworkImage(
                         imageUrl: photoUrl,
@@ -713,7 +847,7 @@ class _UserProfilePageState extends ConsumerState<UserProfilePage> {
           child: Text(
             'ACTIVE ISO REQUESTS',
             style: GoogleFonts.inter(
-              fontSize: 9,
+              fontSize: 10,
               fontWeight: FontWeight.w700,
               letterSpacing: 2.5,
               color: AppColors.textSecondary,

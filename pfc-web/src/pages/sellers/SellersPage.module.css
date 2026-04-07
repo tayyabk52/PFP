@@ -1,0 +1,119 @@
+.page {
+  padding: 1.25rem 1.25rem calc(64px + 1.5rem);
+}
+
+/* ── Search row ── */
+
+.searchRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  margin-bottom: 1.25rem;
+}
+
+.searchWrap {
+  position: relative;
+  flex: 1;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-muted);
+  pointer-events: none;
+}
+
+.searchInput {
+  width: 100%;
+  height: 40px;
+  padding: 0 0.875rem 0 2.25rem;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  color: var(--color-on-background);
+  background: var(--color-surface-container-lowest);
+  border: 1px solid var(--color-surface-container-highest);
+  border-radius: var(--radius-sm);
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease;
+}
+
+.searchInput:focus {
+  border-color: var(--color-primary);
+}
+
+.searchInput::placeholder {
+  color: var(--color-text-muted);
+}
+
+.count {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  color: var(--color-text-muted);
+  letter-spacing: 0.02em;
+}
+
+/* ── Grid ── */
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+/* ── Spinner / Error ── */
+
+.spinnerWrap {
+  display: flex;
+  justify-content: center;
+  padding: 4rem 0;
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 2.5px solid var(--color-surface-container-highest);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.errorMsg {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  color: #ba1a1a;
+  padding: 2rem;
+  text-align: center;
+}
+
+/* ─── Desktop ──────────────────────────────────────────────────────────────── */
+
+@media (min-width: 600px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .page {
+    padding: 2rem 2.5rem 4rem;
+  }
+
+  .searchRow {
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
+  }
+}

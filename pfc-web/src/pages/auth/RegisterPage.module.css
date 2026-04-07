@@ -1,0 +1,201 @@
+.heroDivider {
+  width: 2rem;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.28);
+  margin-bottom: 1.375rem;
+}
+
+/* ── City field ───────────────────────────────────────────────────────────── */
+
+.cityWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4375rem;
+}
+
+.cityLabel {
+  font-family: var(--font-sans);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+.citySelect {
+  height: 3.5rem;
+  padding: 0 2.5rem 0 1rem;
+  background-color: var(--color-surface-container-low);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23555f70' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.875rem center;
+  border: 1px solid transparent;
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  color: var(--color-on-background);
+  outline: none;
+  appearance: none;
+  cursor: pointer;
+  transition: background-color 0.18s, border-color 0.18s, box-shadow 0.18s;
+  width: 100%;
+}
+
+.citySelect:focus {
+  background-color: #ffffff;
+  border-color: rgba(0, 53, 39, 0.3);
+  box-shadow: 0 0 0 3px rgba(0, 53, 39, 0.07);
+}
+
+/* ── Phone prefix ─────────────────────────────────────────────────────────── */
+
+.phonePrefix {
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+/* ── Heritage badge ───────────────────────────────────────────────────────── */
+
+.heritageBadge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  padding: 0.4375rem 0.875rem;
+  border: 1px solid rgba(233, 193, 118, 0.4);
+  border-radius: var(--radius-pill);
+  width: fit-content;
+  margin: 0 auto 1.5rem;
+}
+
+.heritageBadge span {
+  font-family: var(--font-sans);
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #5d4201;
+}
+
+/* ── Legal italic serif ───────────────────────────────────────────────────── */
+
+.legalSerif {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.6875rem;
+  color: var(--color-text-muted);
+  text-align: center;
+  line-height: 1.75;
+  margin-top: 1.25rem;
+  padding: 0 0.25rem;
+}
+
+/* ── Email highlight in OTP step ──────────────────────────────────────────── */
+
+.emailHighlight {
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+/* ── Role cards ───────────────────────────────────────────────────────────── */
+
+.roleCards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.roleCard {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: var(--color-surface-container-low);
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.18s, border-color 0.18s, box-shadow 0.18s;
+  width: 100%;
+}
+
+.roleCard:hover:not(:disabled) {
+  background: #ffffff;
+  border-color: rgba(0, 53, 39, 0.14);
+  box-shadow: 0 2px 12px rgba(0, 53, 39, 0.08);
+}
+
+.roleCard:active:not(:disabled) {
+  transform: scale(0.995);
+}
+
+.roleCard:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.roleCardAccent {
+  background: rgba(0, 53, 39, 0.04);
+  border-color: rgba(0, 53, 39, 0.12);
+}
+
+.roleCardAccent:hover:not(:disabled) {
+  background: rgba(0, 53, 39, 0.07);
+  border-color: rgba(0, 53, 39, 0.2);
+}
+
+.roleIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex-shrink: 0;
+  background: rgba(0, 53, 39, 0.08);
+  color: var(--color-primary);
+}
+
+.roleText {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.roleTitle {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-on-background);
+}
+
+.roleDesc {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  line-height: 1.55;
+}
+
+/* ── Loading row ──────────────────────────────────────────────────────────── */
+
+.loadingRow {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.spinner {
+  width: 1.375rem;
+  height: 1.375rem;
+  border: 2px solid rgba(0, 53, 39, 0.12);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

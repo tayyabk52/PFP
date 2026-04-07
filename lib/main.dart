@@ -12,7 +12,8 @@ Future<void> main() async {
   // Load environment variables
   await dotenv.load(fileName: '.env');
 
-  // Initialise Supabase
+  // Initialise Supabase — session is persisted to SharedPreferences by default.
+  // authFlowType is irrelevant for email+password (no redirect involved).
   await Supabase.initialize(
     url: AppConfig.supabaseUrl,
     anonKey: AppConfig.supabaseAnonKey,

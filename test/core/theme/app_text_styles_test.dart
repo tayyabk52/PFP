@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:pfc_app/core/theme/app_text_styles.dart';
 
 void main() {
@@ -10,6 +9,7 @@ void main() {
   // google_fonts fires background font-loading async errors in unit tests
   // (no network, no bundled fonts). Capture and discard them so the
   // synchronous property assertions below can report clean pass/fail.
+  // ignore: no_leading_underscores_for_local_identifiers
   T _get<T>(T Function() fn) {
     late T result;
     runZonedGuarded(

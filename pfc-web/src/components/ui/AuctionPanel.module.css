@@ -1,0 +1,196 @@
+.panel {
+  background: var(--color-surface-container-lowest);
+  border: 1px solid var(--color-surface-container-highest);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--color-surface-container-low);
+  padding-bottom: 0.875rem;
+}
+
+.titleWrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-on-background);
+}
+
+.icon {
+  color: var(--color-primary);
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.status {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.625rem;
+  border-radius: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.statusActive {
+  background: rgba(186, 26, 26, 0.08);
+  color: #ba1a1a;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(186, 26, 26, 0.4); }
+  70% { box-shadow: 0 0 0 4px rgba(186, 26, 26, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(186, 26, 26, 0); }
+}
+
+.statusEnded {
+  background: var(--color-surface-container-low);
+  color: var(--color-text-muted);
+}
+
+.bidRow {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.bidCol {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.bidLabel {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-text-muted);
+}
+
+.bidValue {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  line-height: 1.1;
+}
+
+.bidValueSm {
+  font-family: var(--font-sans);
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  line-height: 1.1;
+}
+
+.form {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.inputWrap {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  background: var(--color-surface-container-low);
+  border: 1px solid var(--color-surface-container-highest);
+  border-radius: var(--radius-sm);
+  padding: 0 0.75rem;
+  transition: border-color 0.15s ease;
+}
+
+.inputWrap:focus-within {
+  border-color: var(--color-primary);
+}
+
+.currencyPrefix {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  margin-right: 0.5rem;
+}
+
+.input {
+  flex: 1;
+  width: 100%;
+  height: 42px;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  color: var(--color-on-background);
+  font-weight: 500;
+}
+
+.submitBtn {
+  height: 44px;
+  padding: 0 1.25rem;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--color-primary);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+  flex-shrink: 0;
+}
+
+.submitBtn:hover:not(:disabled) {
+  opacity: 0.88;
+}
+
+.submitBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.endedMessage {
+  padding: 1rem;
+  background: var(--color-surface-container-low);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  text-align: center;
+  font-weight: 500;
+}
+
+.error {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  color: #ba1a1a;
+  margin: 0;
+  margin-top: -0.5rem;
+}
+
+.success {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  color: var(--color-primary);
+  margin: 0;
+  margin-top: -0.5rem;
+}

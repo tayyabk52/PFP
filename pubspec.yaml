@@ -22,12 +22,17 @@ dependencies:
 
   # Typography
   google_fonts: ^6.2.1
+  intl: ^0.20.2
 
   # Environment variables
   flutter_dotenv: ^5.1.0
 
   # Utilities
   equatable: ^2.0.5
+
+  # Media
+  image_picker: ^1.1.2
+  cached_network_image: ^3.4.1
 
 dev_dependencies:
   flutter_test:

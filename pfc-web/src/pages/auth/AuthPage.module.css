@@ -1,0 +1,516 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   Auth page layout — "The Olfactory Archive"
+   Mobile-first: stacked hero + form. Desktop: side-by-side split.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* ── Base page ────────────────────────────────────────────────────────────── */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  background: var(--color-surface);
+}
+
+/* ── Hero ─────────────────────────────────────────────────────────────────── */
+
+.hero {
+  position: relative;
+  flex-shrink: 0;
+  height: 52vw;       /* scales from ~300px on narrow to tall on desktop */
+  max-height: 340px;  /* mobile cap */
+  min-height: 220px;
+  background-color: var(--color-primary);
+  background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuARD-Cg2g7YkTJ95FeZa_pfa89XZX1P9J6g1PYj7avWInO8REGERFpLLDymS8yCjm8Ee6prtYgblkC-THzMeXAq5yNYqxb2SgYTulJpgWAS494x0xle_UYbb9riIPfimHSmwxFBTrOVPMZQ2dadnFmPj5ue1v8gqup8XFl75SioWgdIcKFXBnJqgqXL9tTvLCmB33lkuWCySTwYVkXg2OyZ8eMQ3MAmKemkOFdMvHMc1WfoM1ZltYbkIwf-mGKLQW63gRcjJQ4ZnnHv');
+  background-size: cover;
+  background-position: center 30%;
+  overflow: hidden;
+}
+
+.heroRegister {
+  background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC7mlvHeRf_wUAUtgetW9mePUjGeNbls6MM0vRriVGPn3P5JTfYxCvFmGkkenMgARSJgvzSTL0B1j0V_z_a4MEACtXwAAr7zIeNfZBFmxfK9znQxbThhuXxe-jkKiUpXrEihGyV1fxe_zJWRRWJ_srkuQIgdB-xcmksJUKBozbJAHnAzmcQVX1KFaPkNMbp5hqxLsI7PI6ac-Ppd5s2rX4crjg-OwQW2JOz-pgsE5NdU4vdoNUxwxjeUBS_N22IC9CMmyLSelmdRX_9');
+  background-position: center 20%;
+}
+
+/* Dark scrim so text always reads */
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.18) 0%,
+    rgba(0, 0, 0, 0.52) 60%,
+    var(--color-surface) 100%   /* fades seamlessly into page background */
+  );
+}
+
+/* Emerald-tinted overlay for register page */
+.heroOverlayEmerald {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 53, 39, 0.45) 0%,
+    rgba(0, 53, 39, 0.82) 60%,
+    var(--color-surface) 100%
+  );
+}
+
+/* ── Hero branding — mobile centered layout ──────────────────────────────── */
+
+.heroBranding {
+  position: absolute;
+  bottom: 2.25rem;
+  left: 1.75rem;
+  right: 1.75rem;
+}
+
+.heroBrandingCenter {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.75rem 3rem;
+  text-align: center;
+}
+
+.heroEstablished {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 0.625rem;
+}
+
+.heroPfc {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.65);
+  margin-bottom: 0.5rem;
+}
+
+.heroTitle {
+  font-family: var(--font-serif);
+  font-size: clamp(1.625rem, 5vw, 2.25rem);
+  font-style: italic;
+  font-weight: 400;
+  color: #ffffff;
+  line-height: 1.1;
+  margin-bottom: 0.75rem;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.25);
+}
+
+.heroTitleCenter {
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 4.5vw, 2rem);
+  font-style: italic;
+  font-weight: 400;
+  color: #ffffff;
+  line-height: 1.15;
+  margin-bottom: 1.25rem;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.25);
+}
+
+.heroGoldRule {
+  width: 2rem;
+  height: 1px;
+  background: var(--color-gold-accent);
+  opacity: 0.65;
+  margin-bottom: 0.875rem;
+}
+
+.heroSubtitle {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.55);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.heroCenterSubtitle {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.75;
+  text-align: center;
+  max-width: 22rem;
+}
+
+/* ── Form panel ───────────────────────────────────────────────────────────── */
+
+.formPanel {
+  flex: 1;
+  background: var(--color-surface);
+  display: flex;
+  align-items: flex-start;
+  overflow-y: auto;
+}
+
+.formInner {
+  width: 100%;
+  max-width: 460px;
+  padding: 2.5rem 1.75rem 4rem;
+  margin: 0 auto;
+}
+
+/* ── Form typography ──────────────────────────────────────────────────────── */
+
+.formTitle {
+  font-family: var(--font-serif);
+  font-size: 1.875rem;
+  font-weight: 400;
+  color: var(--color-on-background);
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+
+.formSubtitle {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+  margin-bottom: 2.25rem;
+}
+
+/* ── Fields ───────────────────────────────────────────────────────────────── */
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: 1.375rem;
+  margin-bottom: 0.25rem;
+}
+
+.forgotRow {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.75rem;
+}
+
+.forgotLink {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-primary);
+  transition: opacity 0.15s;
+}
+
+.forgotLink:hover {
+  opacity: 0.7;
+}
+
+/* ── Error ────────────────────────────────────────────────────────────────── */
+
+.errorMsg {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: var(--color-error);
+  line-height: 1.55;
+  margin-top: 1rem;
+  padding: 0.625rem 0.875rem;
+  background: rgba(186, 26, 26, 0.06);
+  border-left: 2px solid var(--color-error);
+}
+
+/* ── CTA ──────────────────────────────────────────────────────────────────── */
+
+.ctaRow {
+  margin-top: 1.875rem;
+  margin-bottom: 2rem;
+}
+
+/* ── Switch / back rows ───────────────────────────────────────────────────── */
+
+.switchRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.backRow {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.switchText {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+}
+
+.switchLink {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-decoration-color: rgba(0, 53, 39, 0.25);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.15s, opacity 0.15s;
+}
+
+.switchLink:hover {
+  text-decoration-color: rgba(0, 53, 39, 0.7);
+}
+
+.switchLink:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ── Divider ──────────────────────────────────────────────────────────────── */
+
+.divider {
+  height: 1px;
+  background: var(--color-surface-container-lowest, #ebebee);
+  margin-bottom: 1.25rem;
+}
+
+/* ── Seller row ───────────────────────────────────────────────────────────── */
+
+.sellerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-decoration: none;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  background: var(--color-surface-container-low);
+  transition: background 0.15s;
+  margin-bottom: 2.5rem;
+}
+
+.sellerRow:hover {
+  background: var(--color-surface-container-highest);
+}
+
+.sellerTitle {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-on-background);
+  margin-bottom: 0.2rem;
+}
+
+.sellerSubtitle {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  color: var(--color-text-secondary);
+}
+
+/* ── Security badge ───────────────────────────────────────────────────────── */
+
+.securityBadge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  background: var(--color-surface-container-low);
+  border-radius: var(--radius-pill);
+  width: fit-content;
+  margin: 0 auto 1rem;
+}
+
+.securityBadge span {
+  font-family: var(--font-sans);
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--color-text-secondary);
+}
+
+/* ── Legal ────────────────────────────────────────────────────────────────── */
+
+.legal {
+  font-family: var(--font-sans);
+  font-size: 0.625rem;
+  color: var(--color-text-muted);
+  text-align: center;
+  line-height: 1.8;
+}
+
+/* ── Eye button ───────────────────────────────────────────────────────────── */
+
+.eyeBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.375rem;
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  transition: color 0.15s;
+}
+
+.eyeBtn:hover {
+  color: var(--color-text-secondary);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   DESKTOP  ≥ 900px
+   Side-by-side: hero left (55%), form right (45%)
+   ───────────────────────────────────────────────────────────────────────────── */
+
+@media (min-width: 900px) {
+  .page {
+    flex-direction: row;
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  /* ── Hero — full-height left panel ───────────────────────────────────────── */
+
+  .hero {
+    position: relative;
+    flex: 0 0 55%;
+    height: 100%;
+    max-height: none;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  /* On desktop the overlay doesn't need to fade to surface — full scrim */
+  .heroOverlay {
+    background: linear-gradient(
+      160deg,
+      rgba(0, 0, 0, 0.08) 0%,
+      rgba(0, 0, 0, 0.55) 100%
+    );
+  }
+
+  .heroOverlayEmerald {
+    background: linear-gradient(
+      160deg,
+      rgba(0, 53, 39, 0.4) 0%,
+      rgba(0, 53, 39, 0.82) 100%
+    );
+  }
+
+  /* Bottom-left branding on desktop login */
+  .heroBranding {
+    bottom: 4rem;
+    left: 3.5rem;
+    right: 3.5rem;
+  }
+
+  .heroEstablished {
+    font-size: 0.625rem;
+    letter-spacing: 0.25em;
+    margin-bottom: 0.75rem;
+  }
+
+  .heroTitle {
+    font-size: 3rem;
+    margin-bottom: 1.125rem;
+  }
+
+  .heroSubtitle {
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+  }
+
+  /* Centered branding on desktop register */
+  .heroBrandingCenter {
+    padding: 4rem;
+    justify-content: center;
+  }
+
+  .heroPfc {
+    font-size: 0.625rem;
+    letter-spacing: 0.32em;
+  }
+
+  .heroTitleCenter {
+    font-size: 2.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .heroCenterSubtitle {
+    font-size: 0.8125rem;
+  }
+
+  /* ── Form panel — right side, scrollable ──────────────────────────────── */
+
+  .formPanel {
+    flex: 1;
+    height: 100%;
+    overflow-y: auto;
+    align-items: center;
+  }
+
+  .formInner {
+    max-width: 420px;
+    padding: 4rem 3rem;
+    margin: auto;
+    width: 100%;
+  }
+
+  .formTitle {
+    font-size: 2rem;
+    margin-bottom: 0.625rem;
+  }
+
+  .formSubtitle {
+    font-size: 0.875rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .fields {
+    gap: 1.5rem;
+  }
+
+  .ctaRow {
+    margin-top: 2rem;
+    margin-bottom: 2.25rem;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   MOBILE  < 900px  — centered branding in the hero strip
+   ───────────────────────────────────────────────────────────────────────────── */
+
+@media (max-width: 899px) {
+  /* Center the login hero branding in the strip */
+  .heroBranding {
+    position: absolute;
+    bottom: auto;
+    top: 50%;
+    left: 1.75rem;
+    right: 1.75rem;
+    transform: translateY(-50%);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Prevent hero from growing too tall on large phones */
+  .hero {
+    max-height: 300px;
+  }
+
+  .formInner {
+    padding-top: 2rem;
+  }
+}

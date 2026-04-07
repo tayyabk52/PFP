@@ -1,0 +1,64 @@
+/* ─── PFC Design Tokens — "The Olfactory Archive" ─────────────────────────── */
+
+:root {
+  /* Colors */
+  --color-primary: #003527;
+  --color-primary-gradient-end: #064e3b;
+  --color-secondary: #555f70;
+  --color-gold-accent: #e9c176;
+  --color-gold-dark: #3e2b00;
+
+  --color-surface: #f9f9fc;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f3f3f6;
+  --color-surface-container-highest: #e2e2e5;
+  --color-surface-card: #ffffff;
+
+  --color-on-background: #1a1c1e;
+  --color-text-secondary: #555f70;
+  --color-text-muted: #8a9099;
+  --color-outline-variant: rgba(191, 201, 195, 0.15);
+
+  --color-error: #ba1a1a;
+
+  /* Typography */
+  --font-serif: 'Noto Serif', Georgia, serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
+
+  /* Spacing */
+  --section-gap: 5.5rem;
+
+  /* Radius — PFC uses sharp corners (0.25rem only) */
+  --radius-sm: 0.25rem;
+  --radius-pill: 9999px;
+}
+
+/* ─── Global reset ──────────────────────────────────────────────────────────── */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-surface);
+  color: var(--color-on-background);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── Utility classes ───────────────────────────────────────────────────────── */
+
+.label-uppercase {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}

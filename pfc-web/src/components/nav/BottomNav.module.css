@@ -5,7 +5,8 @@
   flex-direction: row;
   background: #ffffff;
   border-top: 1px solid var(--color-surface-container-low);
-  height: 64px;
+  /* Account for gesture bar / home indicator on Android + iOS */
+  height: calc(64px + env(safe-area-inset-bottom, 0px));
   padding-bottom: env(safe-area-inset-bottom, 0px);
   flex-shrink: 0;
 }
@@ -18,20 +19,21 @@
   justify-content: center;
   gap: 3px;
   cursor: pointer;
-  color: var(--color-text-muted);
+  /* Explicit color so SVG currentColor works in PWA standalone mode */
+  color: #6b7280;
   transition: color 0.15s ease;
-  padding: 0.5rem 0;
+  padding: 0.5rem 0 0;
   border: none;
   background: transparent;
   font-family: var(--font-sans);
 }
 
 .tab:hover {
-  color: var(--color-text-secondary);
+  color: #374151;
 }
 
 .tabActive {
-  color: var(--color-primary);
+  color: #003527;
 }
 
 .label {
@@ -53,6 +55,6 @@
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: var(--color-primary);
+  background: #003527;
   margin-top: 2px;
 }

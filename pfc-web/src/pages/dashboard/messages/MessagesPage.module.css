@@ -300,7 +300,7 @@
   height: 40px;
   padding: 0 0.875rem;
   font-family: var(--font-sans);
-  font-size: 0.875rem;
+  font-size: 1rem;
   color: var(--color-on-background);
   background: var(--color-surface-container-low);
   border: 1px solid var(--color-surface-container-highest);
@@ -685,7 +685,7 @@
   width: 100%;
   padding: 0.75rem;
   font-family: var(--font-sans);
-  font-size: 0.875rem;
+  font-size: 1rem;
   color: var(--color-on-background);
   background: var(--color-surface-container-low);
   border: 1px solid var(--color-surface-container-highest);

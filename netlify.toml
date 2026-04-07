@@ -7,3 +7,14 @@
   from = "/*"
   to = "/index.html"
   status = 200
+
+# Service Worker must never be HTTP-cached — browsers must always fetch fresh
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/workbox-*.js"
+  [headers.values]
+    Cache-Control = "no-cache"

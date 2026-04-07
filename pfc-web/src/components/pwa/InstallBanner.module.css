@@ -1,0 +1,262 @@
+/* ── Install Banner ──────────────────────────────────────────────────────────── */
+
+.banner {
+  position: fixed;
+  bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+  left: 0;
+  right: 0;
+  z-index: 500;
+  margin: 0 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: var(--color-primary);
+  color: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 8px 24px rgba(0, 53, 39, 0.35);
+  animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes slideUp {
+  from { transform: translateY(120%); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.bannerLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.bannerIcon {
+  width: 40px;
+  height: 40px;
+  background: rgba(255,255,255,0.18);
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+
+.bannerText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.bannerTitle {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.bannerSub {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.75);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bannerActions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.installBtn {
+  padding: 0.5rem 1rem;
+  background: #fff;
+  color: var(--color-primary);
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+  white-space: nowrap;
+}
+
+.installBtn:hover {
+  opacity: 0.9;
+}
+
+.dismissBtn {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.7);
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  line-height: 1;
+  transition: color 0.15s ease;
+}
+
+.dismissBtn:hover {
+  color: #fff;
+}
+
+/* ── iOS Modal Overlay ───────────────────────────────────────────────────────── */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 600;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.modal {
+  background: var(--color-surface);
+  border-radius: 1.25rem 1.25rem 0 0;
+  padding: 2rem 1.5rem calc(2rem + env(safe-area-inset-bottom, 0px));
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.875rem;
+  position: relative;
+  animation: slideModal 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes slideModal {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+.modalClose {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: var(--color-surface-container-low);
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  transition: background 0.15s;
+}
+
+.modalClose:hover {
+  background: var(--color-surface-container);
+}
+
+.modalIcon {
+  width: 64px;
+  height: 64px;
+  background: var(--color-primary);
+  color: #fff;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  box-shadow: 0 4px 16px rgba(0, 53, 39, 0.3);
+}
+
+.modalTitle {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-on-background);
+  margin: 0;
+  text-align: center;
+}
+
+.modalSub {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  margin: 0;
+  text-align: center;
+  line-height: 1.55;
+}
+
+.steps {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  color: var(--color-on-background);
+  line-height: 1.45;
+}
+
+.stepIcon {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 53, 39, 0.08);
+  color: var(--color-primary);
+  border-radius: 0.5rem;
+}
+
+.modalDismiss {
+  margin-top: 0.5rem;
+  background: none;
+  border: none;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  transition: color 0.15s;
+}
+
+.modalDismiss:hover {
+  color: var(--color-text-secondary);
+}
+
+/* ── Desktop: hide banner ── */
+
+@media (min-width: 1024px) {
+  .banner {
+    display: none;
+  }
+}

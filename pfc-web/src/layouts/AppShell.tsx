@@ -4,6 +4,8 @@ import { useAuth } from '@/context/AuthContext'
 import { Sidebar } from '@/components/nav/Sidebar'
 import { BottomNav } from '@/components/nav/BottomNav'
 import { TopBar } from '@/components/nav/TopBar'
+import { InstallBanner } from '@/components/pwa/InstallBanner'
+import { UpdateToast } from '@/components/pwa/UpdateToast'
 import styles from './AppShell.module.css'
 
 type Breakpoint = 'desktop' | 'tablet' | 'mobile'
@@ -47,9 +49,11 @@ export function AppShell() {
   if (breakpoint === 'mobile') {
     return (
       <div className={styles.shellMobile}>
+        <UpdateToast />
         <main className={styles.contentMobile}>
           <Outlet />
         </main>
+        <InstallBanner />
         <BottomNav />
       </div>
     )
@@ -59,6 +63,7 @@ export function AppShell() {
 
   return (
     <div className={styles.shell}>
+      <UpdateToast />
       <div className={styles.sidebar}>
         <Sidebar
           collapsed={collapsed}

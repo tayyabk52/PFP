@@ -34,16 +34,21 @@
 .shellMobile {
   display: flex;
   flex-direction: column;
+  /* dvh adapts to the actual displayed viewport in standalone PWA mode.
+     Do NOT add padding-top here — it would reduce shell height causing
+     the nav to float up and leave dead space at the physical bottom. */
   height: 100vh;
-  height: 100svh;
-  /* Push content below camera notch / status bar in PWA standalone */
-  padding-top: env(safe-area-inset-top, 0px);
+  height: 100dvh;
 }
 
 .contentMobile {
   flex: 1;
   overflow-y: auto;
   background: var(--color-surface);
+  /* Status-bar / notch padding lives HERE, inside the scrollable content area.
+     This avoids reducing the total shell height and displacing the nav. */
+  padding-top: env(safe-area-inset-top, 0px);
+  min-height: 0;
 }
 
 .loadingScreen {

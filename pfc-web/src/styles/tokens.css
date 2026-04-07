@@ -48,7 +48,9 @@ html, body, #root {
 
 body {
   font-family: var(--font-sans);
-  background-color: var(--color-surface);
+  /* White body background ensures the OS safe-area zone at the physical
+     screen bottom (below our nav) appears seamlessly white in PWA mode */
+  background-color: #ffffff;
   color: var(--color-on-background);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

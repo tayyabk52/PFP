@@ -43,6 +43,7 @@
 
 html, body, #root {
   height: 100%;
+  overscroll-behavior: none;
 }
 
 body {
@@ -51,6 +52,7 @@ body {
   color: var(--color-on-background);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* ─── Utility classes ───────────────────────────────────────────────────────── */
@@ -61,4 +63,14 @@ body {
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
+}
+
+/* ─── Mobile Overrides ──────────────────────────────────────────────────────── */
+
+input, select, textarea {
+  font-size: 16px;
+}
+
+button, a {
+  touch-action: manipulation;
 }

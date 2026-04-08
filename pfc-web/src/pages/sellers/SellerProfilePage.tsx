@@ -301,7 +301,6 @@ export function SellerProfilePage() {
                     sizeMl={p.size_ml}
                     budgetPkr={p.price_pkr}
                     posterName={p.profiles?.display_name ?? seller.display_name}
-                    posterCity={p.profiles?.city ?? seller.city}
                     createdAt={p.created_at}
                   />
                 ))}

@@ -90,22 +90,7 @@ function InboxIcon() {
   )
 }
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-interface DashboardStats {
-  // member stats
-  isoPosts: number
-  // seller stats
-  activeListings: number
-  // shared
-  unreadMessages: number
-}
-
-interface PulseStats {
-  publishedListings: number
-  activeIsos: number
-  sellers: number
-}
+// ─── Icons ────────────────────────────────────────────────────────────────────
 
 function RefreshIcon({ className }: { className?: string }) {
   return (

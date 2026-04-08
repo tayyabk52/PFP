@@ -30,7 +30,7 @@
   height: 40px;
   padding: 0 0.875rem 0 2.25rem;
   font-family: var(--font-sans);
-  font-size: 0.8125rem;
+  font-size: 1rem; /* 16px to prevent iOS auto-zoom */
   color: var(--color-on-background);
   background: var(--color-surface-container-lowest);
   border: 1px solid var(--color-surface-container-highest);
@@ -149,10 +149,10 @@
 
 .filterSelect, 
 .filterInput {
-  height: 36px;
+  height: 40px; /* Touch friendly on mobile */
   padding: 0 0.75rem;
   font-family: var(--font-sans);
-  font-size: 0.875rem;
+  font-size: 1rem; /* 16px to prevent iOS auto-zoom */
   color: var(--color-on-background);
   background: var(--color-surface-container-lowest);
   border: 1px solid var(--color-surface-container-highest);
@@ -230,6 +230,16 @@
 @media (min-width: 1024px) {
   .page {
     padding: 2rem 2.5rem 4rem;
+  }
+
+  .searchInput {
+    font-size: 0.8125rem;
+  }
+
+  .filterSelect,
+  .filterInput {
+    height: 36px;
+    font-size: 0.875rem;
   }
 
   .headerRow {

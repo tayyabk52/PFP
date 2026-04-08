@@ -48,27 +48,44 @@
   color: var(--color-text-muted);
 }
 
-/* ── Post button ── */
+/* ── Action buttons ── */
 
-.postBtn {
+.actionsWrap {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.postBtn, .viewBtn {
   font-family: var(--font-sans);
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #fff;
-  background: var(--color-primary);
-  border: none;
   padding: 0.625rem 1.25rem;
   border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: opacity 0.15s ease;
-  align-self: flex-start;
+  transition: all 0.15s ease;
   white-space: nowrap;
+}
+
+.postBtn {
+  color: #fff;
+  background: var(--color-primary);
+  border: 1px solid var(--color-primary);
 }
 
 .postBtn:hover {
   opacity: 0.88;
+}
+
+.viewBtn {
+  color: var(--color-primary);
+  background: transparent;
+  border: 1px solid var(--color-primary);
+}
+
+.viewBtn:hover {
+  background: rgba(0, 53, 39, 0.05); /* Light primary tint */
 }
 
 /* ── Grid ── */

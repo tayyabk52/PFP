@@ -169,7 +169,25 @@ export function IsoDetailPage() {
     setTimeout(() => setSaveMsg(null), 3000)
   }
 
-  // ── Delete ──────────────────────────────────────────────────────────────────
+  // ── Publish / Delete ──────────────────────────────────────────────────────────────────
+
+  const [publishing, setPublishing] = useState(false)
+
+  async function handlePublish() {
+    if (!post || !confirm('Publish this ISO request?')) return
+    setPublishing(true)
+    const { error } = await supabase.from('listings').update({ 
+      status: 'Published',
+      published_at: new Date().toISOString()
+    }).eq('id', post.id)
+    
+    if (!error) {
+      setPost(prev => prev ? { ...prev, status: 'Published' } : prev)
+    } else {
+      alert('Failed to publish. Please try again.')
+    }
+    setPublishing(false)
+  }
 
   async function handleDelete() {
     if (!post || !confirm('Remove this ISO post?')) return
@@ -349,14 +367,21 @@ export function IsoDetailPage() {
                 <span className={`${styles.statusBadge} ${statusColors[post.status] ?? ''}`}>
                   {post.status.toUpperCase()}
                 </span>
-                {isOwner && (
-                  <button className={styles.editToggleBtn} onClick={() => setEditing(true)}>
-                    <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                      <path d="M9.5 1.5l3 3L4 13H1v-3L9.5 1.5z" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                    Edit
-                  </button>
-                )}
+                <div className={styles.statusActions}>
+                  {isOwner && post.status === 'Draft' && !editing && (
+                    <button className={styles.publishBtn} onClick={handlePublish} disabled={publishing}>
+                      {publishing ? 'Publishing…' : 'Publish Request'}
+                    </button>
+                  )}
+                  {isOwner && (
+                    <button className={styles.editToggleBtn} onClick={() => setEditing(true)}>
+                      <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                        <path d="M9.5 1.5l3 3L4 13H1v-3L9.5 1.5z" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                      Edit
+                    </button>
+                  )}
+                </div>
               </div>
 
               <h1 className={styles.fragranceName}>{post.fragrance_name}</h1>

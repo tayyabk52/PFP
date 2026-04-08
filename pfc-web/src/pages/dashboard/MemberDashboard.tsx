@@ -206,7 +206,6 @@ export function MemberDashboard() {
   const displayName = profile?.display_name ?? 'Member'
 
   // Stats from profile (no extra query needed — already loaded in AuthContext)
-  const reviews = profile?.rating_count ?? 0
   const avgRating = profile?.avg_rating ? profile.avg_rating.toFixed(1) : '—'
   const transactions = profile?.transaction_count ?? 0
 

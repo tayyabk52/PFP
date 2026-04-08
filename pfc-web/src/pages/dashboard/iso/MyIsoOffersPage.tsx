@@ -128,16 +128,8 @@ export function MyIsoOffersPage() {
             }
             title={emptyState.title}
             description={emptyState.desc}
-          >
-            {emptyState.action && (
-              <button 
-                className={styles.browseBtn}
-                onClick={() => navigate('/iso')}
-              >
-                Browse ISO Board
-              </button>
-            )}
-          </EmptyState>
+            action={emptyState.action ? { label: 'Browse ISO Board', onClick: () => navigate('/iso') } : undefined}
+          />
         ) : (
           <div className={styles.list}>
             {filtered.map(o => {

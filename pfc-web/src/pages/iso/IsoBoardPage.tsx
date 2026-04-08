@@ -37,6 +37,10 @@ export function IsoBoardPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [search, setSearch] = useState('')
+  const [showFilters, setShowFilters] = useState(false)
+  const [sort, setSort] = useState<'newest' | 'oldest' | 'budget_asc' | 'budget_desc'>('newest')
+  const [minSize, setMinSize] = useState('')
+  const [maxBudget, setMaxBudget] = useState('')
 
   useEffect(() => {
     async function fetchPosts() {
@@ -59,12 +63,42 @@ export function IsoBoardPage() {
     fetchPosts()
   }, [])
 
-  const filtered = search
-    ? posts.filter(p => {
-        const q = search.toLowerCase()
-        return p.fragrance_name.toLowerCase().includes(q) || p.brand.toLowerCase().includes(q)
-      })
-    : posts
+  let filtered = posts
+
+  if (search) {
+    const q = search.toLowerCase()
+    filtered = filtered.filter(p => p.fragrance_name.toLowerCase().includes(q) || p.brand.toLowerCase().includes(q))
+  }
+
+  if (minSize) {
+    const s = parseInt(minSize) || 0
+    filtered = filtered.filter(p => p.size_ml >= s)
+  }
+
+  if (maxBudget) {
+    const b = parseInt(maxBudget) || 0
+    // 0 budget_pkr means flexible. Flexible is technically anything, but when filtering by maximum, we typically only include items that strictly match the tight budget constraint, or flexible items.
+    filtered = filtered.filter(p => p.price_pkr === 0 || p.price_pkr <= b)
+  }
+
+  filtered.sort((a, b) => {
+    switch (sort) {
+      case 'oldest': return new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+      case 'budget_asc': {
+        const valA = a.price_pkr === 0 ? Infinity : a.price_pkr
+        const valB = b.price_pkr === 0 ? Infinity : b.price_pkr
+        return valA - valB
+      }
+      case 'budget_desc': {
+        const valA = a.price_pkr === 0 ? Infinity : a.price_pkr
+        const valB = b.price_pkr === 0 ? Infinity : b.price_pkr
+        return valB - valA
+      }
+      case 'newest':
+      default:
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    }
+  })
 
   return (
     <div className={styles.page}>
@@ -84,6 +118,20 @@ export function IsoBoardPage() {
             aria-label="Search ISO posts"
           />
         </div>
+        
+        <button 
+          className={`${styles.filterToggleBtn} ${showFilters ? styles.filterToggleActive : ''}`}
+          onClick={() => setShowFilters(!showFilters)}
+          aria-expanded={showFilters}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+            <line x1="4" y1="6" x2="20" y2="6" />
+            <line x1="8" y1="12" x2="16" y2="12" />
+            <line x1="10" y1="18" x2="14" y2="18" />
+          </svg>
+          Filters
+        </button>
+
         {(profile?.role === 'member' || profile?.role === 'seller') && (
           <div className={styles.actionsWrap}>
             <button
@@ -101,6 +149,45 @@ export function IsoBoardPage() {
           </div>
         )}
       </div>
+
+      {showFilters && (
+        <div className={styles.filterPanel}>
+          <div className={styles.filterCol}>
+            <label className={styles.filterLabel}>Sort By</label>
+            <select className={styles.filterSelect} value={sort} onChange={e => setSort(e.target.value as any)}>
+              <option value="newest">Newest First</option>
+              <option value="oldest">Oldest First</option>
+              <option value="budget_asc">Budget: Low to High</option>
+              <option value="budget_desc">Budget: High to Low</option>
+            </select>
+          </div>
+          <div className={styles.filterCol}>
+            <label className={styles.filterLabel}>Budget Range (PKR)</label>
+            <input 
+              className={styles.filterInput} 
+              type="number" 
+              placeholder="Max budget (any)" 
+              value={maxBudget} 
+              onChange={e => setMaxBudget(e.target.value)}
+              min={0}
+            />
+          </div>
+          <div className={styles.filterCol}>
+            <label className={styles.filterLabel}>Size (ml)</label>
+            <input 
+              className={styles.filterInput} 
+              type="number" 
+              placeholder="Min size (any)" 
+              value={minSize} 
+              onChange={e => setMinSize(e.target.value)}
+              min={1}
+            />
+          </div>
+          <div className={styles.filterActions}>
+            <button className={styles.clearBtn} onClick={() => { setSort('newest'); setMaxBudget(''); setMinSize('') }}>Clear Filters</button>
+          </div>
+        </div>
+      )}
 
       {/* Content */}
       {loading ? (
@@ -131,7 +218,6 @@ export function IsoBoardPage() {
               sizeMl={p.size_ml}
               budgetPkr={p.price_pkr}
               posterName={p.profiles?.display_name ?? 'Member'}
-              posterCity={p.profiles?.city ?? ''}
               createdAt={p.created_at}
             />
           ))}

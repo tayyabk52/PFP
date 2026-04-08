@@ -112,10 +112,14 @@ interface PulseStats {
 export function MemberDashboard() {
   const { profile, user } = useAuth()
   const navigate = useNavigate()
-
-  const [stats, setStats] = useState<DashboardStats>({ isoPosts: 0, activeListings: 0, unreadMessages: 0 })
-  const [pulse, setPulse] = useState<PulseStats>({ publishedListings: 0, activeIsos: 0, sellers: 0 })
-  const [statsLoading, setStatsLoading] = useState(true)
+  const { 
+    statsLoading, 
+    stats,
+    pulse,
+    avgRating,
+    transactions,
+    fetchStats 
+  } = useDashboardStore()
 
   const isSeller = profile?.role === 'seller' || profile?.role === 'admin'
 

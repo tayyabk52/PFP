@@ -18,6 +18,7 @@ const EXACT_TITLES: Record<string, TitleResult> = {
   '/dashboard':          { section: 'Dashboard', title: 'Overview' },
   '/marketplace':        { section: null,        title: 'Marketplace' },
   '/iso':                { section: null,        title: 'ISO Board' },
+  '/iso/create':         { section: 'ISO Board', title: 'Post ISO Request' },
   '/knowledge':          { section: null,        title: 'Knowledge Base' },
   '/sellers':            { section: null,        title: 'Sellers' },
   '/dashboard/messages': { section: 'Dashboard', title: 'Messages' },

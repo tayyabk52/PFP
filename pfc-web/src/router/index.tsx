@@ -7,6 +7,7 @@ import { MarketplacePage } from '@/pages/marketplace/MarketplacePage'
 import { ListingDetailPage } from '@/pages/marketplace/ListingDetailPage'
 import { EditListingPage } from '@/pages/marketplace/EditListingPage'
 import { IsoBoardPage } from '@/pages/iso/IsoBoardPage'
+import { IsoCreatePage } from '@/pages/iso/IsoCreatePage'
 import { IsoDetailPage } from '@/pages/iso/IsoDetailPage'
 import { SellersPage } from '@/pages/sellers/SellersPage'
 import { SellerProfilePage } from '@/pages/sellers/SellerProfilePage'
@@ -46,6 +47,8 @@ export const router = createBrowserRouter([
       { path: '/marketplace/:id/edit', element: <EditListingPage /> },
       { path: '/marketplace/:id', element: <ListingDetailPage /> },
       { path: '/iso', element: <IsoBoardPage /> },
+      { path: '/iso/create', element: <IsoCreatePage /> },
+      { path: '/iso/new', element: <Navigate to="/iso/create" replace /> },
       { path: '/iso/:id', element: <IsoDetailPage /> },
       { path: '/sellers', element: <SellersPage /> },
       { path: '/sellers/:id', element: <SellerProfilePage /> },

@@ -258,9 +258,20 @@ export function IsoDetailPage() {
 
   async function handleWithdrawOffer(offerId: string) {
     if (!confirm('Withdraw this offer?')) return
-    const { error } = await supabase.from('iso_offers').update({ status: 'withdrawn' }).eq('id', offerId)
+    setOfferError(null)
+    setSubmittingOffer(true)
+
+    const { error } = await supabase
+      .from('iso_offers')
+      .update({ status: 'withdrawn' })
+      .eq('id', offerId)
+
+    setSubmittingOffer(false)
+
     if (!error) {
       setOffers(prev => prev.map(o => o.id === offerId ? { ...o, status: 'withdrawn' } : o))
+    } else {
+      setOfferError(`Failed to withdraw offer: ${error.message}`)
     }
   }
 
@@ -569,8 +580,12 @@ export function IsoDetailPage() {
                           </div>
                           {o.message && <p className={styles.offerMsg}>{o.message}</p>}
                           {o.status === 'pending' && (
-                            <button className={styles.withdrawBtn} onClick={() => handleWithdrawOffer(o.id)}>
-                              Withdraw offer
+                            <button
+                              className={styles.withdrawBtn}
+                              onClick={() => handleWithdrawOffer(o.id)}
+                              disabled={submittingOffer}
+                            >
+                              {submittingOffer ? 'Withdrawing…' : 'Withdraw offer'}
                             </button>
                           )}
                         </div>

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/context/AuthContext'
+import { fetchDashboardData, type DashboardStats, type PulseStats } from '@/utils/dashboardCache'
 import styles from './MemberDashboard.module.css'
 
 // ─── Inline SVG Icons ────────────────────────────────────────────────────────
@@ -107,6 +107,16 @@ interface PulseStats {
   sellers: number
 }
 
+function RefreshIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="23 4 23 10 17 10" />
+      <polyline points="1 20 1 14 7 14" />
+      <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+    </svg>
+  )
+}
+
 // ─── MemberDashboard ─────────────────────────────────────────────────────────
 
 export function MemberDashboard() {
@@ -118,85 +128,20 @@ export function MemberDashboard() {
 
   const isSeller = profile?.role === 'seller' || profile?.role === 'admin'
 
-  useEffect(() => {
+  const loadData = async (force = false) => {
     if (!user?.id) return
-
-    async function fetchStats() {
-      setStatsLoading(true)
-
-      // ── User-specific stats ──────────────────────────────
-      const userId = user!.id
-
-      // ISO posts (all users can post ISOs)
-      const isoPromise = supabase
-        .from('listings')
-        .select('id', { count: 'exact', head: true })
-        .eq('seller_id', userId)
-        .eq('listing_type', 'ISO')
-        .not('status', 'in', '("Deleted","Removed")')
-
-      // Active published listings (sellers only, but we always fetch)
-      const listingsPromise = supabase
-        .from('listings')
-        .select('id', { count: 'exact', head: true })
-        .eq('seller_id', userId)
-        .eq('status', 'Published')
-        .neq('listing_type', 'ISO')
-
-      // Unread messages: get conversation IDs first
-      const convsPromise = supabase
-        .from('conversations')
-        .select('id')
-        .or(`buyer_id.eq.${userId},seller_id.eq.${userId}`)
-
-      const [isoRes, listingsRes, convsRes] = await Promise.all([isoPromise, listingsPromise, convsPromise])
-
-      let unread = 0
-      const convIds = convsRes.data?.map((c: { id: string }) => c.id) ?? []
-      if (convIds.length > 0) {
-        const { count } = await supabase
-          .from('messages')
-          .select('id', { count: 'exact', head: true })
-          .in('conversation_id', convIds)
-          .neq('sender_id', userId)
-          .is('read_at', null)
-        unread = count ?? 0
-      }
-
-      setStats({
-        isoPosts: isoRes.count ?? 0,
-        activeListings: listingsRes.count ?? 0,
-        unreadMessages: unread,
-      })
-
-      // ── Marketplace pulse (global, public counts) ────────
-      const [listingsPulse, isosPulse, sellersPulse] = await Promise.all([
-        supabase
-          .from('listings')
-          .select('id', { count: 'exact', head: true })
-          .eq('status', 'Published')
-          .neq('listing_type', 'ISO'),
-        supabase
-          .from('listings')
-          .select('id', { count: 'exact', head: true })
-          .eq('status', 'Published')
-          .eq('listing_type', 'ISO'),
-        supabase
-          .from('profiles')
-          .select('id', { count: 'exact', head: true })
-          .eq('role', 'seller'),
-      ])
-
-      setPulse({
-        publishedListings: listingsPulse.count ?? 0,
-        activeIsos: isosPulse.count ?? 0,
-        sellers: sellersPulse.count ?? 0,
-      })
-
+    setStatsLoading(true)
+    try {
+      const data = await fetchDashboardData(user.id, force)
+      setStats(data.stats)
+      setPulse(data.pulse)
+    } finally {
       setStatsLoading(false)
     }
+  }
 
-    fetchStats()
+  useEffect(() => {
+    loadData()
   }, [user?.id])
 
   const archiveNumber = profile?.created_at
@@ -451,6 +396,14 @@ export function MemberDashboard() {
                     <span className={styles.pulsePingInner} />
                   </div>
                   <h3 className={styles.pulseTitle}>Marketplace Pulse</h3>
+                  <button 
+                    className={`${styles.refreshBtn} ${statsLoading ? styles.spinning : ''}`} 
+                    onClick={() => loadData(true)}
+                    disabled={statsLoading}
+                    title="Refresh Data"
+                  >
+                    <RefreshIcon />
+                  </button>
                 </div>
               </div>
               

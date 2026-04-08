@@ -1,9 +1,12 @@
 .page {
   display: flex;
-  height: 100vh;
-  height: 100dvh;
+  /* Use 100% to fill the contentMobile container which is already correctly
+     sized by AppShell (including safe-area-inset-top padding).
+     Using 100dvh here would overflow that padding and clip the input bar. */
+  height: 100%;
   overflow: hidden;
 }
+
 
 /* ── Conversation list ── */
 

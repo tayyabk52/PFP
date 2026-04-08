@@ -230,47 +230,38 @@ export function MemberDashboard() {
 
         {/* ─── Stat Grid ─── */}
         <div className={styles.statGrid}>
-          {isSeller ? (
-            // Seller stats
-            <>
-              <div className={styles.statCell}>
-                <p className={styles.statLabel}>Active Listings</p>
-                <p className={styles.statValue}>{statsLoading ? '—' : stats.activeListings}</p>
+          {/* Col 1 */}
+          <div 
+            className={`${styles.statPrimary} ${styles.clickable}`}
+            onClick={() => navigate(isSeller ? '/dashboard/listings' : '/dashboard/iso')}
+          >
+            <div className={styles.statPattern} />
+            <div className={styles.statPrimaryContent}>
+              <div className={styles.statPrimaryIcon}>
+                 <PackageIcon />
               </div>
-              <div className={styles.statCell}>
-                <p className={styles.statLabel}>Avg Rating</p>
-                <p className={styles.statValue}>{statsLoading ? '—' : avgRating}</p>
+              <div className={styles.statPrimaryBottom}>
+                <p className={styles.statPrimaryLabel}>{isSeller ? 'Asset Portfolio' : 'ISO Requisitions'}</p>
+                <div className={styles.statPrimaryValueRow}>
+                  <span className={styles.statPrimaryValue}>{statsLoading ? '—' : (isSeller ? stats.activeListings : stats.isoPosts)}</span>
+                  <span className={styles.statPrimarySub}>{isSeller ? 'Active Listings' : 'Active Posts'}</span>
+                </div>
               </div>
-              <div className={styles.statCell}>
-                <p className={styles.statLabel}>Unread</p>
-                <p className={styles.statValue}>{statsLoading ? '—' : stats.unreadMessages}</p>
-              </div>
-              <div className={styles.statCell}>
-                <p className={styles.statLabel}>Transactions</p>
-                <p className={styles.statValue}>{statsLoading ? '—' : transactions}</p>
-              </div>
-            </>
-          ) : (
-            // Member stats
-            <>
-              <div className={styles.statCell}>
-                <p className={styles.statLabel}>ISO Posts</p>
-                <p className={styles.statValue}>{statsLoading ? '—' : stats.isoPosts}</p>
-              </div>
-              <div className={styles.statCell}>
-                <p className={styles.statLabel}>Reviews</p>
-                <p className={styles.statValue}>{statsLoading ? '—' : reviews}</p>
-              </div>
-              <div className={styles.statCell}>
-                <p className={styles.statLabel}>Unread</p>
-                <p className={styles.statValue}>{statsLoading ? '—' : stats.unreadMessages}</p>
-              </div>
-              <div className={styles.statCell}>
-                <p className={styles.statLabel}>Transactions</p>
-                <p className={styles.statValue}>{statsLoading ? '—' : transactions}</p>
-              </div>
-            </>
-          )}
+            </div>
+          </div>
+          
+          {/* Col 2 */}
+          <div className={styles.statStack}>
+            <div className={styles.statMini}>
+              {stats.unreadMessages > 0 && <div className={styles.redDot} />}
+              <div className={styles.statMiniValue}>{statsLoading ? '—' : stats.unreadMessages}</div>
+              <div className={styles.statMiniLabel}>Inbox</div>
+            </div>
+            <div className={styles.statMini}>
+              <div className={styles.statMiniValue}>{statsLoading ? '—' : (isSeller ? avgRating : transactions)}</div>
+              <div className={styles.statMiniLabel}>{isSeller ? 'Avg Rating' : 'Transactions'}</div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -429,41 +420,6 @@ export function MemberDashboard() {
               </span>
             </button>
           </div>
-        </div>
-
-        <div className={styles.rightCol}>
-          {/* ─── Marketplace Pulse Card ─── */}
-          <div className={styles.pulseCard}>
-            <div className={styles.pulseCircle1} />
-            <div className={styles.pulseCircle2} />
-            <div className={styles.pulseHeader}>
-              <span className={styles.pulseLabel}>Marketplace Pulse</span>
-              <div className={styles.pulseLiveGroup}>
-                <div className={styles.liveDot} />
-                <span className={styles.liveText}>Live</span>
-              </div>
-            </div>
-            <div className={styles.pulseStats}>
-              <div className={styles.pulseStat}>
-                <span className={styles.pulseStatValue}>
-                  {statsLoading ? '—' : pulse.publishedListings}
-                </span>
-                <span className={styles.pulseStatLabel}>Listings</span>
-              </div>
-              <div className={styles.pulseStat}>
-                <span className={styles.pulseStatValue}>
-                  {statsLoading ? '—' : pulse.activeIsos}
-                </span>
-                <span className={styles.pulseStatLabel}>Active ISOs</span>
-              </div>
-              <div className={styles.pulseStat}>
-                <span className={styles.pulseStatValue}>
-                  {statsLoading ? '—' : pulse.sellers}
-                </span>
-                <span className={styles.pulseStatLabel}>Sellers</span>
-              </div>
-            </div>
-          </div>
 
           {/* ─── Become Seller CTA — hidden for existing sellers/admins ─── */}
           {!isSeller && (
@@ -483,6 +439,55 @@ export function MemberDashboard() {
               </button>
             </div>
           )}
+        </div>
+
+        <div className={styles.rightCol}>
+          {/* ─── Marketplace Pulse Card ─── */}
+          <div className={styles.pulseCard}>
+            <div className={styles.pulseBgBlur} />
+            <div className={styles.pulseContent}>
+              <div className={styles.pulseHeader}>
+                <div className={styles.pulseTitleWrap}>
+                  <div className={styles.pulsePingWrap}>
+                    <span className={styles.pulsePing} />
+                    <span className={styles.pulsePingInner} />
+                  </div>
+                  <h3 className={styles.pulseTitle}>Marketplace Pulse</h3>
+                </div>
+              </div>
+              
+              <div className={styles.pulseStatsRow}>
+                <div 
+                  className={`${styles.pulseStatItem} ${styles.clickable}`}
+                  onClick={() => navigate('/marketplace')}
+                >
+                   <span className={styles.pulseItemLabel}>Inventory</span>
+                   <div className={styles.pulseItemValueRow}>
+                     <span className={styles.pulseItemValue}>{statsLoading ? '—' : pulse.publishedListings} Listings</span>
+                     <ChevronRightIcon />
+                   </div>
+                </div>
+                <div 
+                  className={`${styles.pulseStatItem} ${styles.clickable}`}
+                  onClick={() => navigate('/iso')}
+                >
+                   <span className={styles.pulseItemLabel}>Requests</span>
+                   <div className={styles.pulseItemValueRow}>
+                     <span className={styles.pulseItemValue}>{statsLoading ? '—' : pulse.activeIsos} ISOs</span>
+                     <ChevronRightIcon />
+                   </div>
+                </div>
+              </div>
+              
+              <div 
+                className={`${styles.pulseFooter} ${styles.clickable}`}
+                onClick={() => navigate('/sellers')}
+              >
+                <span className={styles.pulseItemLabel}>Network Status</span>
+                <span className={styles.pulseFooterText}>{statsLoading ? '—' : pulse.sellers} Verified Sellers Active</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 

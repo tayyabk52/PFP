@@ -149,7 +149,7 @@ export function IsoBoardPage() {
               className={styles.postBtn}
               onClick={() => navigate('/iso/create')}
             >
-              Post ISO Request
+              Post ISO
             </button>
           </div>
         )}

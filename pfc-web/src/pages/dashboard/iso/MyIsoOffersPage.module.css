@@ -1,0 +1,221 @@
+.page {
+  padding: 1.25rem 1.25rem calc(64px + 1.5rem);
+  display: flex;
+  flex-direction: column;
+}
+
+.tabsWrap {
+  margin-bottom: 1.25rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--color-surface-container-highest);
+  width: max-content;
+  min-width: 100%;
+}
+
+.tab {
+  padding: 0.625rem 1.25rem;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.tabActive {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface-container-lowest);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 0 0 1px var(--color-surface-container-highest);
+  overflow: hidden;
+}
+
+.offerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 1rem 1.25rem;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--color-surface-container-highest);
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s ease;
+  gap: 1rem;
+}
+
+.offerRow:last-child {
+  border-bottom: none;
+}
+
+.offerRow:hover {
+  background: var(--color-surface-container-low);
+}
+
+.offerRowPending {
+  border-left: 3px solid var(--color-primary);
+  padding-left: calc(1.25rem - 3px);
+}
+
+.offerRowInactive {
+  opacity: 0.55;
+}
+
+.rowLeft {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.topMeta {
+  margin-bottom: 0.25rem;
+}
+
+.statusBadge {
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+}
+
+.statusPending { background: rgba(0, 53, 39, 0.08); color: var(--color-primary); }
+.statusAccepted { background: rgba(233, 193, 118, 0.2); color: #7a6000; }
+.statusDeclined { background: rgba(186, 26, 26, 0.08); color: #ba1a1a; }
+.statusWithdrawn { background: rgba(138, 144, 153, 0.12); color: var(--color-text-muted); }
+
+.isoName {
+  font-family: var(--font-serif);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-on-background);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.isoBrand {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.meta {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 0.125rem;
+}
+
+.metaTime {
+  font-family: var(--font-sans);
+  font-size: 0.625rem;
+  color: var(--color-text-muted);
+  margin-top: 0.25rem;
+}
+
+.rowRight {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  flex-shrink: 0;
+}
+
+.amountChip {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: #7a6000;
+  background: rgba(233, 193, 118, 0.2);
+  padding: 0.25rem 0.625rem;
+  border-radius: var(--radius-sm);
+}
+
+.chipMuted {
+  background: var(--color-surface-container-low);
+  color: var(--color-text-muted);
+}
+
+.chevron {
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.browseBtn {
+  margin-top: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #fff;
+  background: var(--color-primary);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.spinnerWrap {
+  display: flex;
+  justify-content: center;
+  padding: 4rem 0;
+}
+
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--color-surface-container-high);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.errorMsg {
+  color: #ba1a1a;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  padding: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .page {
+    padding: 2rem 2.5rem 4rem;
+  }
+}

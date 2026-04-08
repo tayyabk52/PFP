@@ -140,6 +140,11 @@ export function IsoBoardPage() {
             >
               My ISOs
             </button>
+            {(profile?.role === 'seller' || profile?.role === 'admin') && (
+              <button className={styles.viewBtn} onClick={() => navigate('/dashboard/iso/offers')}>
+                My Offers
+              </button>
+            )}
             <button
               className={styles.postBtn}
               onClick={() => navigate('/iso/create')}

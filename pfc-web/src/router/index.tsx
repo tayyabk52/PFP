@@ -16,6 +16,7 @@ import { MessagesPage } from '@/pages/dashboard/messages/MessagesPage'
 import { MyIsoPostsPage } from '@/pages/dashboard/iso/MyIsoPostsPage'
 import { ProfilePage } from '@/pages/dashboard/profile/ProfilePage'
 import { MyListingsPage } from '@/pages/dashboard/listings/MyListingsPage'
+import { MyIsoOffersPage } from '@/pages/dashboard/iso/MyIsoOffersPage'
 
 function StubPage({ title }: { title: string }) {
   return (
@@ -55,6 +56,7 @@ export const router = createBrowserRouter([
       { path: '/knowledge', element: <KnowledgePage /> },
       { path: '/dashboard/messages', element: <MessagesPage /> },
       { path: '/dashboard/iso', element: <MyIsoPostsPage /> },
+      { path: '/dashboard/iso/offers', element: <MyIsoOffersPage /> },
       { path: '/dashboard/listings', element: <MyListingsPage /> },
       { path: '/dashboard/reports', element: <StubPage title="Reports" /> },
       { path: '/dashboard/profile', element: <ProfilePage /> },

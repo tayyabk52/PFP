@@ -320,6 +320,19 @@ export function MemberDashboard() {
                     <ChevronRightIcon />
                   </span>
                 </button>
+
+                <button className={styles.actionCard} onClick={() => navigate('/dashboard/iso/offers')}>
+                  <div className={styles.actionIconBox}>
+                    <InboxIcon />
+                  </div>
+                  <div className={styles.actionCardText}>
+                    <p className={styles.actionCardTitle}>My ISO Offers</p>
+                    <p className={styles.actionCardSub}>Track your offer statuses</p>
+                  </div>
+                  <span className={styles.chevron}>
+                    <ChevronRightIcon />
+                  </span>
+                </button>
               </div>
             </>
           ) : (

@@ -171,7 +171,10 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
   const navItems: NavItem[] = [
     { label: 'Market',       icon: StorefrontIcon, route: '/marketplace' },
     { label: 'Dashboard',    icon: GridIcon,       route: '/dashboard' },
-    ...(isSeller ? [{ label: 'My Listings', icon: PackageIcon, route: '/dashboard/listings' }] : []),
+    ...(isSeller ? [
+      { label: 'My Listings', icon: PackageIcon, route: '/dashboard/listings' },
+      { label: 'My Offers',   icon: InboxIcon,   route: '/dashboard/iso/offers' }
+    ] : []),
     { label: 'Messages',     icon: MailIcon,       route: '/dashboard/messages' },
     { label: 'ISO Board',    icon: SearchIcon,     route: '/iso' },
     { label: 'My ISO Posts', icon: InboxIcon,      route: '/dashboard/iso' },

@@ -23,6 +23,7 @@ const EXACT_TITLES: Record<string, TitleResult> = {
   '/sellers':            { section: null,        title: 'Sellers' },
   '/dashboard/messages': { section: 'Dashboard', title: 'Messages' },
   '/dashboard/iso':      { section: 'Dashboard', title: 'My ISO Posts' },
+  '/dashboard/iso/offers': { section: 'Dashboard', title: 'My ISO Offers' },
   '/dashboard/reports':  { section: 'Dashboard', title: 'Reports' },
   '/dashboard/profile':  { section: 'Dashboard', title: 'Profile' },
 }

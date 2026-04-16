@@ -359,8 +359,8 @@ export function MessagesPage() {
     })
 
     if (!error) {
-      setConfirmedSaleIds(prev => new Set([...prev, listingId]))
       fetchMessages(selectedId)
+      await fetchConfirmedSales(selectedId)
       setListingRefs(prev =>
         prev.map(entry => (entry.listingId === listingId ? { ...entry, isAvailable: false } : entry))
       )

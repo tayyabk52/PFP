@@ -6,6 +6,7 @@ import { DashboardPage } from '@/pages/dashboard/DashboardPage'
 import { MarketplacePage } from '@/pages/marketplace/MarketplacePage'
 import { ListingDetailPage } from '@/pages/marketplace/ListingDetailPage'
 import { EditListingPage } from '@/pages/marketplace/EditListingPage'
+import { CreateListingPage } from '@/pages/marketplace/CreateListingPage'
 import { IsoBoardPage } from '@/pages/iso/IsoBoardPage'
 import { IsoCreatePage } from '@/pages/iso/IsoCreatePage'
 import { IsoDetailPage } from '@/pages/iso/IsoDetailPage'
@@ -44,7 +45,7 @@ export const router = createBrowserRouter([
     children: [
       { path: '/dashboard', element: <DashboardPage /> },
       { path: '/marketplace', element: <MarketplacePage /> },
-      { path: '/marketplace/new', element: <StubPage title="Create Listing" /> },
+      { path: '/marketplace/new', element: <CreateListingPage /> },
       { path: '/marketplace/:id/edit', element: <EditListingPage /> },
       { path: '/marketplace/:id', element: <ListingDetailPage /> },
       { path: '/iso', element: <IsoBoardPage /> },

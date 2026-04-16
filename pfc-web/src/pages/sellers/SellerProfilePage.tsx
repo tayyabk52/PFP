@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useCallback, useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/context/AuthContext'
 import { initials, timeAgo } from '@/lib/format'
@@ -7,9 +7,8 @@ import { ListingCard } from '@/components/cards/ListingCard'
 import { IsoCard } from '@/components/cards/IsoCard'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { ReportModal } from '@/components/ui/ReportModal'
+import { ReviewModal } from '@/components/ui/ReviewModal'
 import styles from './SellerProfilePage.module.css'
-
-// ─── Types ─────────────────────────────────────────────────────────────────────
 
 interface SellerProfile {
   id: string
@@ -48,24 +47,65 @@ interface IsoPost {
   profiles: { display_name: string; city: string; avatar_url: string | null }
 }
 
+interface ReviewPhoto {
+  id: string
+  file_url: string
+  path: string
+}
+
 interface Review {
   id: string
+  listing_id: string
   rating: number
   comment: string
   submitted_at: string
+  last_edited_at: string | null
   reviewer_display_name: string | null
   reviewer_avatar_url: string | null
+  reviewer_id: string | null
   fragrance_name: string | null
   brand: string | null
+  photos: ReviewPhoto[]
 }
 
-// ─── StarRow ───────────────────────────────────────────────────────────────────
+interface IsoPostRow {
+  id: string
+  fragrance_name: string
+  brand: string
+  size_ml: number
+  price_pkr: number
+  created_at: string
+  profiles: { display_name: string; city: string; avatar_url: string | null }[] | null
+}
+
+interface ReviewRow {
+  id: string
+  listing_id: string
+  rating: number
+  comment: string
+  submitted_at: string
+  last_edited_at: string | null
+  reviewer_id: string
+  reviewer: { display_name: string; avatar_url: string | null }[] | null
+  listings: { fragrance_name: string; brand: string }[] | null
+  review_photos: ReviewPhoto[] | null
+}
 
 function StarRow({ rating }: { rating: number }) {
   return (
     <div className={styles.starRow} aria-label={`${rating} out of 5`}>
-      {[1, 2, 3, 4, 5].map(i => (
-        <svg key={i} width="12" height="12" viewBox="0 0 10 10" fill={i <= rating ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="0.5" aria-hidden="true" className={i <= rating ? styles.starFilled : styles.starEmpty}>
+      {[1, 2, 3, 4, 5].map(index => (
+        <svg
+          key={index}
+          width="12"
+          height="12"
+          viewBox="0 0 10 10"
+          fill={index <= rating ? 'currentColor' : 'none'}
+          stroke="currentColor"
+          strokeWidth="0.5"
+          aria-hidden="true"
+          className={index <= rating ? styles.starFilled : styles.starEmpty}
+        >
           <path d="M5 1l1.12 2.27L8.5 3.635l-1.75 1.705.413 2.41L5 6.545l-2.163 1.205.413-2.41L1.5 3.635l2.38-.365L5 1z" />
         </svg>
       ))}
@@ -73,7 +113,32 @@ function StarRow({ rating }: { rating: number }) {
   )
 }
 
-// ─── SellerProfilePage ─────────────────────────────────────────────────────────
+function RatingDistribution({ reviews }: { reviews: Review[] }) {
+  const total = reviews.length
+  if (total === 0) return null
+
+  const rows = [5, 4, 3, 2, 1].map(star => ({
+    star,
+    count: reviews.filter(review => review.rating === star).length,
+  }))
+
+  return (
+    <div className={styles.ratingDistribution}>
+      {rows.map(({ star, count }) => (
+        <div key={star} className={styles.ratingDistRow}>
+          <span className={styles.ratingDistLabel}>{'★'.repeat(star)}{'☆'.repeat(5 - star)}</span>
+          <div className={styles.ratingDistBarWrap}>
+            <div
+              className={styles.ratingDistBar}
+              style={{ width: `${total > 0 ? (count / total) * 100 : 0}%` }}
+            />
+          </div>
+          <span className={styles.ratingDistCount}>{count}</span>
+        </div>
+      ))}
+    </div>
+  )
+}
 
 export function SellerProfilePage() {
   const { id } = useParams<{ id: string }>()
@@ -84,78 +149,92 @@ export function SellerProfilePage() {
   const [isoPosts, setIsoPosts] = useState<IsoPost[]>([])
   const [reviews, setReviews] = useState<Review[]>([])
   const [reportModalOpen, setReportModalOpen] = useState(false)
+  const [editingReview, setEditingReview] = useState<Review | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
+  const fetchProfile = useCallback(async () => {
     if (!id) return
-    async function fetchProfile() {
-      setLoading(true)
-      setError(null)
 
-      const [profileRes, listingsRes, isoRes, reviewsRes] = await Promise.all([
-        supabase
-          .from('profiles')
-          .select('id, display_name, city, avatar_url, transaction_count, avg_rating, rating_count, pfc_seller_code, is_legacy_fb_seller, verified_at, created_at, role')
-          .eq('id', id)
-          .single(),
+    setLoading(true)
+    setError(null)
 
-        supabase
-          .from('listings')
-          .select('id, fragrance_name, brand, price_pkr, listing_type, condition, size_ml, seller_id, listing_photos(file_url, display_order)')
-          .eq('seller_id', id)
-          .eq('status', 'Published')
-          .neq('listing_type', 'ISO')
-          .order('created_at', { ascending: false }),
+    const [profileRes, listingsRes, isoRes, reviewsRes] = await Promise.all([
+      supabase
+        .from('profiles')
+        .select('id, display_name, city, avatar_url, transaction_count, avg_rating, rating_count, pfc_seller_code, is_legacy_fb_seller, verified_at, created_at, role')
+        .eq('id', id)
+        .single(),
+      supabase
+        .from('listings')
+        .select('id, fragrance_name, brand, price_pkr, listing_type, condition, size_ml, seller_id, listing_photos(file_url, display_order)')
+        .eq('seller_id', id)
+        .eq('status', 'Published')
+        .neq('listing_type', 'ISO')
+        .order('created_at', { ascending: false }),
+      supabase
+        .from('listings')
+        .select('id, fragrance_name, brand, size_ml, price_pkr, created_at, profiles(display_name, city, avatar_url)')
+        .eq('seller_id', id)
+        .eq('listing_type', 'ISO')
+        .eq('status', 'Published')
+        .order('created_at', { ascending: false }),
+      supabase
+        .from('reviews')
+        .select('id, listing_id, rating, comment, submitted_at, last_edited_at, reviewer_id, reviewer:profiles!reviewer_id(display_name, avatar_url), listings!listing_id(fragrance_name, brand), review_photos(id, file_url, path)')
+        .eq('seller_id', id)
+        .order('submitted_at', { ascending: false }),
+    ])
 
-        supabase
-          .from('listings')
-          .select('id, fragrance_name, brand, size_ml, price_pkr, created_at, profiles(display_name, city, avatar_url)')
-          .eq('seller_id', id)
-          .eq('listing_type', 'ISO')
-          .eq('status', 'Published')
-          .order('created_at', { ascending: false }),
-
-        supabase
-          .from('reviews')
-          .select('id, rating, comment, submitted_at, reviewer:profiles!reviewer_id(display_name, avatar_url), listings!listing_id(fragrance_name, brand)')
-          .eq('seller_id', id)
-          .order('submitted_at', { ascending: false }),
-      ])
-
-      if (profileRes.error || !profileRes.data) {
-        setError('Seller profile not found.')
-        setLoading(false)
-        return
-      }
-
-      setSeller(profileRes.data as unknown as SellerProfile)
-      setListings((listingsRes.data as unknown as Listing[]) ?? [])
-      setIsoPosts((isoRes.data as unknown as IsoPost[]) ?? [])
-
-      // Flatten the nested review join
-      const rawReviews = (reviewsRes.data ?? []) as unknown as Array<{
-        id: string
-        rating: number
-        comment: string
-        submitted_at: string
-        reviewer: { display_name: string; avatar_url: string | null } | null
-        listings: { fragrance_name: string; brand: string } | null
-      }>
-      setReviews(rawReviews.map(r => ({
-        id: r.id,
-        rating: r.rating,
-        comment: r.comment,
-        submitted_at: r.submitted_at,
-        reviewer_display_name: r.reviewer?.display_name ?? null,
-        reviewer_avatar_url: r.reviewer?.avatar_url ?? null,
-        fragrance_name: r.listings?.fragrance_name ?? null,
-        brand: r.listings?.brand ?? null,
-      })))
+    if (profileRes.error || !profileRes.data) {
+      setError('Seller profile not found.')
       setLoading(false)
+      return
     }
-    fetchProfile()
+
+    setSeller(profileRes.data as unknown as SellerProfile)
+    setListings((listingsRes.data as Listing[]) ?? [])
+    setIsoPosts(
+      ((isoRes.data ?? []) as unknown as IsoPostRow[]).map(post => ({
+        id: post.id,
+        fragrance_name: post.fragrance_name,
+        brand: post.brand,
+        size_ml: post.size_ml,
+        price_pkr: post.price_pkr,
+        created_at: post.created_at,
+        profiles: post.profiles?.[0] ?? {
+          display_name: '',
+          city: '',
+          avatar_url: null,
+        },
+      }))
+    )
+
+    const rawReviews = (reviewsRes.data ?? []) as unknown as ReviewRow[]
+
+    setReviews(
+      rawReviews.map(review => ({
+        id: review.id,
+        listing_id: review.listing_id,
+        rating: review.rating,
+        comment: review.comment,
+        submitted_at: review.submitted_at,
+        last_edited_at: review.last_edited_at,
+        reviewer_id: review.reviewer_id,
+        reviewer_display_name: review.reviewer?.[0]?.display_name ?? null,
+        reviewer_avatar_url: review.reviewer?.[0]?.avatar_url ?? null,
+        fragrance_name: review.listings?.[0]?.fragrance_name ?? null,
+        brand: review.listings?.[0]?.brand ?? null,
+        photos: review.review_photos ?? [],
+      }))
+    )
+
+    setLoading(false)
   }, [id])
+
+  useEffect(() => {
+    fetchProfile()
+  }, [fetchProfile])
 
   if (loading) {
     return (
@@ -169,7 +248,9 @@ export function SellerProfilePage() {
     return (
       <div className={styles.errorWrap}>
         <p className={styles.errorMsg}>{error ?? 'Seller not found.'}</p>
-        <button className={styles.backBtn} onClick={() => navigate('/sellers')}>← Back to Sellers</button>
+        <button className={styles.backBtn} onClick={() => navigate('/sellers')}>
+          ← Back to Sellers
+        </button>
       </div>
     )
   }
@@ -181,14 +262,15 @@ export function SellerProfilePage() {
   return (
     <div className={styles.page}>
       <div className={styles.layout}>
-        {/* ── Left (identity) ── */}
         <div className={styles.leftCol}>
           <div className={styles.identityCard}>
             <div className={styles.avatarWrap}>
               {seller.avatar_url ? (
                 <img src={seller.avatar_url} alt={seller.display_name} className={styles.avatarImg} />
               ) : (
-                <div className={styles.avatarInitials} aria-hidden="true">{sellerInitials}</div>
+                <div className={styles.avatarInitials} aria-hidden="true">
+                  {sellerInitials}
+                </div>
               )}
             </div>
 
@@ -197,22 +279,25 @@ export function SellerProfilePage() {
             <div className={styles.badgeRow}>
               <span className={styles.verifiedBadge}>
                 <svg width="9" height="9" viewBox="0 0 10 10" fill="none" aria-hidden="true">
-                  <path d="M2 5.2L4.1 7.5L8 3" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                  <path
+                    d="M2 5.2L4.1 7.5L8 3"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
                 Verified Seller
               </span>
-              {seller.is_legacy_fb_seller && (
-                <span className={styles.legacyBadge}>Legacy Seller</span>
-              )}
+              {seller.is_legacy_fb_seller && <span className={styles.legacyBadge}>Legacy Seller</span>}
             </div>
 
-            {seller.pfc_seller_code && (
-              <p className={styles.sellerCode}>{seller.pfc_seller_code}</p>
-            )}
+            {seller.pfc_seller_code && <p className={styles.sellerCode}>{seller.pfc_seller_code}</p>}
 
-            <p className={styles.cityMeta}>{seller.city} · Member since {memberSince}</p>
+            <p className={styles.cityMeta}>
+              {seller.city} · Member since {memberSince}
+            </p>
 
-            {/* Stats */}
             <div className={styles.statsGrid}>
               <div className={styles.statCell}>
                 <span className={styles.statNum}>{listings.length}</span>
@@ -237,10 +322,7 @@ export function SellerProfilePage() {
                 <button className={styles.messageBtn} onClick={() => navigate('/dashboard/messages')}>
                   Message Seller
                 </button>
-                <button 
-                  className={styles.reportLinkBtn}
-                  onClick={() => setReportModalOpen(true)}
-                >
+                <button className={styles.reportLinkBtn} onClick={() => setReportModalOpen(true)}>
                   Report User
                 </button>
               </div>
@@ -248,9 +330,7 @@ export function SellerProfilePage() {
           </div>
         </div>
 
-        {/* ── Right (listings + ISO + reviews) ── */}
         <div className={styles.rightCol}>
-          {/* Active Listings */}
           <section className={styles.section}>
             <p className={styles.sectionLabel}>Active Listings</p>
             {listings.length === 0 ? (
@@ -266,19 +346,22 @@ export function SellerProfilePage() {
               />
             ) : (
               <div className={styles.listingGrid}>
-                {listings.map(l => {
-                  const photos = [...(l.listing_photos ?? [])].sort((a, b) => a.display_order - b.display_order)
+                {listings.map(listing => {
+                  const photos = [...(listing.listing_photos ?? [])].sort(
+                    (a, b) => a.display_order - b.display_order
+                  )
+
                   return (
                     <ListingCard
-                      key={l.id}
-                      id={l.id}
-                      fragranceName={l.fragrance_name}
-                      brand={l.brand}
-                      pricePkr={l.price_pkr}
-                      listingType={l.listing_type}
-                      condition={l.condition ?? undefined}
+                      key={listing.id}
+                      id={listing.id}
+                      fragranceName={listing.fragrance_name}
+                      brand={listing.brand}
+                      pricePkr={listing.price_pkr}
+                      listingType={listing.listing_type}
+                      condition={listing.condition ?? undefined}
                       photoUrl={photos[0]?.file_url}
-                      sizeMl={l.size_ml}
+                      sizeMl={listing.size_ml}
                       sellerName={seller.display_name}
                     />
                   )
@@ -287,56 +370,122 @@ export function SellerProfilePage() {
             )}
           </section>
 
-          {/* ISO Posts */}
           {isoPosts.length > 0 && (
             <section className={styles.section}>
               <p className={styles.sectionLabel}>ISO Requests</p>
               <div className={styles.isoList}>
-                {isoPosts.map(p => (
+                {isoPosts.map(post => (
                   <IsoCard
-                    key={p.id}
-                    id={p.id}
-                    fragranceName={p.fragrance_name}
-                    brand={p.brand}
-                    sizeMl={p.size_ml}
-                    budgetPkr={p.price_pkr}
-                    posterName={p.profiles?.display_name ?? seller.display_name}
-                    createdAt={p.created_at}
+                    key={post.id}
+                    id={post.id}
+                    fragranceName={post.fragrance_name}
+                    brand={post.brand}
+                    sizeMl={post.size_ml}
+                    budgetPkr={post.price_pkr}
+                    posterName={post.profiles?.display_name ?? seller.display_name}
+                    createdAt={post.created_at}
                   />
                 ))}
               </div>
             </section>
           )}
 
-          {/* Reviews */}
           {reviews.length > 0 && (
             <section className={styles.section}>
               <p className={styles.sectionLabel}>Reviews · {seller.rating_count}</p>
+              <RatingDistribution reviews={reviews} />
+
               <div className={styles.reviewList}>
-                {reviews.map(r => {
-                  const reviewerInitials = r.reviewer_display_name ? initials(r.reviewer_display_name) : '?'
+                {reviews.map(review => {
+                  const reviewerInitials = review.reviewer_display_name
+                    ? initials(review.reviewer_display_name)
+                    : '?'
+                  const isOwnReview = myProfile?.id === review.reviewer_id
+                  const withinEditWindow =
+                    isOwnReview &&
+                    new Date(review.submitted_at).getTime() > Date.now() - 48 * 60 * 60 * 1000
+
                   return (
-                    <div key={r.id} className={styles.reviewCard}>
+                    <div key={review.id} className={styles.reviewCard}>
                       <div className={styles.reviewHeader}>
                         <div className={styles.reviewerAvatar}>
-                          {r.reviewer_avatar_url ? (
-                            <img src={r.reviewer_avatar_url} alt={r.reviewer_display_name ?? ''} className={styles.reviewerAvatarImg} />
-                          ) : reviewerInitials}
+                          {review.reviewer_avatar_url ? (
+                            <img
+                              src={review.reviewer_avatar_url}
+                              alt={review.reviewer_display_name ?? 'Member'}
+                              className={styles.reviewerAvatarImg}
+                            />
+                          ) : (
+                            reviewerInitials
+                          )}
                         </div>
+
                         <div className={styles.reviewerInfo}>
-                          <span className={styles.reviewerName}>{r.reviewer_display_name ?? 'Member'}</span>
-                          {(r.fragrance_name || r.brand) && (
+                          <span className={styles.reviewerName}>
+                            {review.reviewer_display_name ?? 'Member'}
+                          </span>
+                          {(review.fragrance_name || review.brand) && (
                             <span className={styles.reviewListing}>
-                              {r.fragrance_name}{r.brand ? ` · ${r.brand}` : ''}
+                              {[review.fragrance_name, review.brand].filter(Boolean).join(' · ')}
                             </span>
                           )}
                         </div>
+
                         <div className={styles.reviewMeta}>
-                          <StarRow rating={r.rating} />
-                          <span className={styles.reviewTime}>{timeAgo(r.submitted_at)}</span>
+                          <StarRow rating={review.rating} />
+                          <span className={styles.reviewTime}>{timeAgo(review.submitted_at)}</span>
                         </div>
+
+                        {withinEditWindow && (
+                          <button
+                            type="button"
+                            className={styles.reviewEditBtn}
+                            onClick={() => setEditingReview(review)}
+                            aria-label="Edit review"
+                          >
+                            <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                              <path
+                                d="M9.5 1.5l3 3L4 13H1v-3L9.5 1.5z"
+                                stroke="currentColor"
+                                strokeWidth="1.4"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                            </svg>
+                          </button>
+                        )}
                       </div>
-                      {r.comment && <p className={styles.reviewComment}>{r.comment}</p>}
+
+                      {review.comment && <p className={styles.reviewComment}>{review.comment}</p>}
+
+                      {review.photos.length > 0 && (
+                        <div className={styles.reviewPhotoGrid}>
+                          {review.photos.map(photo => (
+                            <a
+                              key={photo.id}
+                              href={photo.file_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className={styles.reviewPhotoThumb}
+                            >
+                              <img src={photo.file_url} alt="Review" />
+                            </a>
+                          ))}
+                        </div>
+                      )}
+
+                      <div className={styles.verifiedChip}>
+                        <svg width="9" height="9" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+                          <path
+                            d="M2 5.2L4.1 7.5L8 3"
+                            stroke="currentColor"
+                            strokeWidth="1.6"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                        Verified Purchase
+                      </div>
                     </div>
                   )
                 })}
@@ -345,13 +494,33 @@ export function SellerProfilePage() {
           )}
         </div>
       </div>
-      
-      {/* ── Report modal ── */}
+
       {reportModalOpen && (
         <ReportModal
           type="user"
           targetId={seller.id}
           onClose={() => setReportModalOpen(false)}
+        />
+      )}
+
+      {editingReview && (
+        <ReviewModal
+          listingId={editingReview.listing_id}
+          sellerId={seller.id}
+          sellerName={seller.display_name}
+          fragranceName={editingReview.fragrance_name ?? undefined}
+          brand={editingReview.brand ?? undefined}
+          existingReview={{
+            id: editingReview.id,
+            rating: editingReview.rating,
+            comment: editingReview.comment,
+            photos: editingReview.photos,
+          }}
+          onClose={() => setEditingReview(null)}
+          onSuccess={async () => {
+            setEditingReview(null)
+            await fetchProfile()
+          }}
         />
       )}
     </div>

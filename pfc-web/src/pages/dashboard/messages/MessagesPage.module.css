@@ -556,6 +556,42 @@
   background: rgba(233, 193, 118, 0.3);
 }
 
+.refConfirmBtn,
+.refConfirmedBtn {
+  font-family: var(--font-sans);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: 2px;
+  padding: 0.25rem 0.5rem;
+  align-self: flex-start;
+}
+
+.refConfirmBtn {
+  color: #fff;
+  background: var(--color-primary);
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.12s ease;
+}
+
+.refConfirmBtn:hover:not(:disabled) {
+  opacity: 0.88;
+}
+
+.refConfirmBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.refConfirmedBtn {
+  color: var(--color-primary);
+  background: rgba(0, 53, 39, 0.08);
+  border: 1px solid rgba(0, 53, 39, 0.18);
+  cursor: default;
+}
+
 .isoTag {
   font-family: var(--font-sans);
   font-size: 0.5rem;
@@ -578,6 +614,31 @@
   text-transform: uppercase;
   color: var(--color-primary);
   opacity: 0.7;
+}
+
+.refReviewRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  align-self: flex-start;
+}
+
+.refEditBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 53, 39, 0.08);
+  color: var(--color-primary);
+  cursor: pointer;
+  transition: background 0.15s ease, opacity 0.15s ease;
+}
+
+.refEditBtn:hover {
+  background: rgba(0, 53, 39, 0.14);
 }
 
 /* ── System messages ── */

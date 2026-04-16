@@ -2,6 +2,7 @@ import { useEffect, useState, FormEvent } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/context/AuthContext'
+import { ReviewModal } from '@/components/ui/ReviewModal'
 import { formatPkr, timeAgo, initials } from '@/lib/format'
 import styles from './IsoDetailPage.module.css'
 
@@ -50,6 +51,11 @@ interface SellerOfferGroup {
   offers: IsoOffer[]   // sorted newest-first; latest is offers[0]
 }
 
+interface IsoReviewTarget {
+  sellerId: string
+  sellerName: string
+}
+
 function groupOffersBySeller(offers: IsoOffer[]): SellerOfferGroup[] {
   const map = new Map<string, SellerOfferGroup>()
   // offers come in ascending order from DB; we reverse per-group below
@@ -77,6 +83,9 @@ export function IsoDetailPage() {
   const [offers, setOffers] = useState<IsoOffer[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [isoReviewTarget, setIsoReviewTarget] = useState<IsoReviewTarget | null>(null)
+  const [isoReviewedSellerIds, setIsoReviewedSellerIds] = useState<Set<string>>(new Set())
+  const [reviewModalOpen, setReviewModalOpen] = useState(false)
 
   // ── Edit state ──────────────────────────────────────────────────────────────
   const [editing, setEditing] = useState(false)
@@ -132,6 +141,54 @@ export function IsoDetailPage() {
     }
     fetchPost()
   }, [id])
+
+  useEffect(() => {
+    async function fetchIsoReviewState() {
+      if (!post || !profile?.id || post.status !== 'Sold' || post.seller_id !== profile.id) {
+        setIsoReviewTarget(null)
+        setIsoReviewedSellerIds(new Set())
+        return
+      }
+
+      const [confirmationRes, reviewsRes] = await Promise.all([
+        supabase
+          .from('iso_accepted_confirmations')
+          .select('seller_id')
+          .eq('iso_id', post.id)
+          .eq('buyer_id', profile.id)
+          .order('confirmed_at', { ascending: false })
+          .limit(1)
+          .maybeSingle(),
+        supabase
+          .from('reviews')
+          .select('seller_id')
+          .eq('reviewer_id', profile.id)
+          .eq('listing_id', post.id),
+      ])
+
+      const reviewedSellerIds = new Set<string>(
+        (reviewsRes.data ?? []).map(row => row.seller_id as string).filter(Boolean)
+      )
+      setIsoReviewedSellerIds(reviewedSellerIds)
+
+      const acceptedSellerId =
+        (confirmationRes.data?.seller_id as string | undefined) ??
+        offers.find(offer => offer.status === 'accepted')?.seller_id
+
+      if (!acceptedSellerId) {
+        setIsoReviewTarget(null)
+        return
+      }
+
+      const acceptedOffer = offers.find(offer => offer.seller_id === acceptedSellerId)
+      setIsoReviewTarget({
+        sellerId: acceptedSellerId,
+        sellerName: acceptedOffer?.profiles?.display_name ?? 'Seller',
+      })
+    }
+
+    fetchIsoReviewState()
+  }, [offers, post, profile?.id])
 
   // ── Save edits ──────────────────────────────────────────────────────────────
 
@@ -310,6 +367,8 @@ export function IsoDetailPage() {
   const canSubmitOffer = isSeller && !isOwner && isOpen && !myPendingOffer
 
   const sellerGroups = isOwner ? groupOffersBySeller(offers) : []
+  const canReviewAcceptedSeller =
+    !!isoReviewTarget && !isoReviewedSellerIds.has(isoReviewTarget.sellerId)
 
   const statusColors: Record<string, string> = {
     Published: styles.statusPublished,
@@ -659,8 +718,42 @@ export function IsoDetailPage() {
               <p className={styles.memberInfoText}>Only verified sellers can submit offers on ISO requests.</p>
             </div>
           )}
+
+          {isOwner && post.status === 'Sold' && isoReviewTarget && (
+            <div className={styles.isoReviewCard}>
+              <p className={styles.isoReviewLabel}>Post-Fulfillment Review</p>
+              <p className={styles.isoReviewText}>
+                {canReviewAcceptedSeller
+                  ? `Leave a review for ${isoReviewTarget.sellerName} after this ISO was fulfilled.`
+                  : `You have already reviewed ${isoReviewTarget.sellerName} for this ISO.`}
+              </p>
+              {canReviewAcceptedSeller ? (
+                <button className={styles.isoReviewBtn} onClick={() => setReviewModalOpen(true)}>
+                  Leave a Review for {isoReviewTarget.sellerName}
+                </button>
+              ) : (
+                <span className={styles.isoReviewDone}>Reviewed</span>
+              )}
+            </div>
+          )}
         </div>
       </div>
+
+      {reviewModalOpen && post && isoReviewTarget && (
+        <ReviewModal
+          listingId={post.id}
+          sellerId={isoReviewTarget.sellerId}
+          sellerName={isoReviewTarget.sellerName}
+          fragranceName={post.fragrance_name}
+          brand={post.brand}
+          isoId={post.id}
+          onClose={() => setReviewModalOpen(false)}
+          onSuccess={() => {
+            setIsoReviewedSellerIds(prev => new Set(prev).add(isoReviewTarget.sellerId))
+            setReviewModalOpen(false)
+          }}
+        />
+      )}
     </div>
   )
 }

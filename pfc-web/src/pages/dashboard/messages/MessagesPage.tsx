@@ -619,9 +619,30 @@ export function MessagesPage() {
                       (message.sender_id !== user?.id && message.sender_id !== selectedConvo.otherUserId)
 
                     if (isSystem) {
+                      const isSaleConfirmed = message.body === 'Sale confirmed. Thank you for trading on PFC!'
+                      const unreviewedRef = isSaleConfirmed && !isSeller
+                        ? listingRefs.find(ref => confirmedSaleIds.has(ref.listingId) && !reviewedListings[ref.listingId])
+                        : null
+
                       return (
                         <div key={message.id} className={styles.systemMsg}>
-                          <span>{message.body}</span>
+                          <span>
+                            {message.body}
+                            {unreviewedRef && (
+                              <button
+                                className={styles.systemLeaveReviewBtn}
+                                onClick={() => setReviewSheet({
+                                  listingId: unreviewedRef.listingId,
+                                  sellerId: unreviewedRef.sellerId,
+                                  sellerName: selectedConvo.otherUserName,
+                                  fragranceName: unreviewedRef.fragranceName,
+                                  brand: unreviewedRef.brand,
+                                })}
+                              >
+                                Leave a Review
+                              </button>
+                            )}
+                          </span>
                         </div>
                       )
                     }

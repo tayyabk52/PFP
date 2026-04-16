@@ -657,6 +657,30 @@
   background: var(--color-surface-container-low);
   padding: 0.375rem 0.875rem;
   border-radius: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.systemLeaveReviewBtn {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  background: rgba(0, 53, 39, 0.1);
+  border: none;
+  padding: 0.2rem 0.6rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  white-space: nowrap;
+}
+
+.systemLeaveReviewBtn:hover {
+  background: rgba(0, 53, 39, 0.18);
 }
 
 /* ── Read ticks ── */
